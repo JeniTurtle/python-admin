@@ -1,0 +1,141 @@
+{% extends 'common/layout.html' %}
+
+{% block title %}用户列表{% endblock %}
+
+{% block content %}
+<div class="wrapper wrapper-content">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>用户列表</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-9 m-b-xs">
+                            <div data-toggle="buttons" class="btn-group">
+                                <label class="btn btn-sm btn-white check-type" onclick="window.location.href='/user'">
+                                    <input type="radio" value="0" name="options">所有用户</label>
+                                <label class="btn btn-sm btn-white check-type" onclick="window.location.href='/user?crm=4_1_1'">
+                                    <input type="radio" value="4_1_1" name="options">普通用户</label>
+                                <label class="btn btn-sm btn-white check-type" onclick="window.location.href='/user?crm=4_1_2'">
+                                    <input type="radio" value="4_1_2" name="options">一评用户</label>
+                                <label class="btn btn-sm btn-white check-type" onclick="window.location.href='/user?crm=4_1_3'">
+                                    <input type="radio" value="4_1_3" name="options">二评用户</label>
+                                <label class="btn btn-sm btn-white check-type" onclick="window.location.href='/user?crm=4_1_4'">
+                                    <input type="radio" value="4_1_4" name="options">专家用户</label>
+                                <label class="btn btn-sm btn-white check-type" onclick="window.location.href='/user?crm=4_1_5'">
+                                    <input type="radio" value="4_1_5" name="options">管理员</label>
+                                <label class="btn btn-sm btn-white check-type" onclick="window.location.href='/user?crm=4_1_6'">
+                                    <input type="radio" value="4_1_5" name="options">新编剧用户</label>
+                                <label class="btn btn-sm btn-white check-type" onclick="window.location.href='/user?crm=4_1_7'">
+                                    <input type="radio" value="4_1_5" name="options">新编剧管理员</label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <form method="get" action="">
+                                <div class="input-group">
+                                    <input type="text" name="mobile" id="mobile-input" placeholder="请输入手机号查询" class="input-sm form-control"> <span class="input-group-btn">
+                                    <input type="submit" class="btn btn-sm btn-primary"> 搜索</input> </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>用户姓名</th>
+                                <th>手机号码</th>
+                                <th>用户类型</th>
+                                <th>评审正确率</th>
+                                <th>是否在职</th>
+                                <th>平均工作时长</th>
+                                <th>最近登录时间</th>
+                                <th>查看任务数量</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in list %}
+                            <tr>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.mobile }}</td>
+                                <td>{{ item.auth_name }}</td>
+                                {% if not item.ipPoolAdmin %}
+                                <td>0.00%</td>
+                                {% else %}
+                                <td>{{ item.ipPoolAdmin.accuracy * 100 }}%</td>
+                                {% endif %}
+                                {% if item.stillwork == 1 %}
+                                    <td class="text-navy">在职</td>
+                                {% else %}
+                                    <td class="text-danger">离职</td>
+                                {% endif %}
+                                <td>{{ item.everyday_time }}小时</td>
+                                {% if not item.ipPoolAdmin %}
+                                <td>暂无登录记录</td>
+                                {% else %}
+                                <td>{{ item.ipPoolAdmin.createAt }}</td>
+                                {% endif %}
+                                <td><a href="javascript:verifyDetail('{{ item.uid }}')">查看任务数量</a></td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% if not list %}
+                        <p style="text-align: center" ng-if="nullData" class="ng-scope">暂无数据</p>
+                        {% endif %}
+
+                        <div id='page_navigation'>
+                        </div>
+                        <span style="height: 28px;line-height: 28px;float: right;" class="ng-binding">共 {{ page.item_count }} 条记录 &nbsp;&nbsp;&nbsp;</span>
+                        <input type='hidden' id='current_page' value="{{ page.page_index }}" />
+                            <input type='hidden' id='total_num' value="{{ page.item_count }}" />
+                            <input type='hidden' id='page_num' value="{{ page.page_size }}" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade in checkResult">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="row first-result" style="padding-bottom: 20px;">
+                    <div class="col-sm-12">
+                        <h3 class="m-t-none m-b">任务数量</h3>
+                        <div class="count-list">
+                            <br>
+                            <p></p><p></p><p></p><p></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="padding-bottom: 20px;">
+                    <button class="btn btn-md btn-primary pull-right m-t-n-xs" id="closeDialog" type="button"><strong>确定</strong>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade in checkResult" style="display: none"></div>
+
+{% endblock %}
+
+{% block afterfoot %}
+<script src="/static/user/user.js"></script>
+{% endblock %}

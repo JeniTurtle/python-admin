@@ -1,0 +1,268 @@
+{% extends 'common/layout.html' %}
+
+{% block title %}黑名单列表{% endblock %}
+
+{% block beforehead %}
+<link href="/static/common/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+<style>
+    .datepicker {z-index: 10000 !important;}
+    .option-hide {display: none;}
+    .option-show {display: block;}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper wrapper-content">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>黑名单列表</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-5 m-b-xs">
+                            <div data-toggle="buttons" class="btn-group">
+                                <label class="btn btn-sm btn-white check-type {% if param.status == 1 %} active {% endif %}" onclick="window.location.href='/blacklist?status=1'">
+                                    <input type="radio" name="options">待分配</label>
+                                <label class="btn btn-sm btn-white check-type {% if param.status == 2 %} active {% endif %}" onclick="window.location.href='/blacklist?status=2'">
+                                    <input type="radio" name="options">包装中</label>
+                                <label class="btn btn-sm btn-white check-type {% if param.status == 3 %} active {% endif %}" onclick="window.location.href='/blacklist?status=3'">
+                                    <input type="radio" name="options">已上线</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4" style="text-align: right;line-height: 32px">
+                          <span class="text-danger">*黄色标识的作品表示已下架或版权全部售出</span>
+                        </div>
+                        <div class="col-sm-3">
+                            <form method="get" action="">
+                                <div class="input-group">
+                                    <input type="text" value="{{ param.title }}" name="title" id="title-input" placeholder="请输入作品名查询" class="input-sm form-control">
+                                    <span class="input-group-btn">
+                                        <input type="submit" class="btn btn-sm btn-primary"> 搜索</input>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>作品名称</th>
+                                <th>作者名称</th>
+                                <th>作品类型</th>
+                                <th>机器评分</th>
+                                <th>原文链接</th>
+                                {% if param.status == 1 and not param.title and user.crm.find('4_1_10') >= 0 %}
+                                <th>操作</th>
+                                {% endif %}
+                                {% if param.status > 1 or param.title %}
+                                <th>包装人</th>
+                                <th>预期上线时间</th>
+                                <th>状态</th>
+                                {% endif %}
+
+                                {% if param.status == 3 or param.title %}
+                                <th>黑名单上线时间</th>
+                                <th>点击率</th>
+                                <th>阅读时长</th>
+                                <th>试读数</th>
+                                <th>索要全文数</th>
+                                <th>邀约数</th>
+                                <th>沟通人数</th>
+                                {% endif %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in list %}
+                            <tr>
+                                <td style="line-height: 28px;">{{ item.id }}</td>
+								<td style="line-height: 28px;"><a {% if item.ip.status != 0 or item.ip.subStatus == 2 %} class="text-warning" {% endif %} target="_blank" href="http://www.yunlaiwu.com/detail?id={{ item.objectId }}">{{ item.ip.title }}</a></td>
+                                <td style="line-height: 28px;">{{ item.ip.author }}</td>
+                                <td style="line-height: 28px;">{{ item.ip.workType }}</td>
+                                <td style="line-height: 28px;">{{ item.ip.pagerankVal}}分</td>
+                                <td style="line-height: 28px;">
+                                {% if not item.ip.rawFile %}
+                                    <span class="text-danger">无原文</span>
+                                {% endif %}
+                                {% if item.ip.rawFile %}
+                                    <a class="text-navy" target="_blank" href="{{ item.ip.rawFile }}">下载原文</a>
+                                {% endif %}
+                                </td>
+                                {% if param.status == 1 and not param.title and user.crm.find('4_1_10') >= 0 %}
+                                <td>
+                                    <input data-ipid="{{ item.id }}" class="allot-btn btn btn-primary" style="height: 28px;line-height: 28px;padding-top: 0;margin: 0;font-size: 13px;" type="button" value="分配包装人">
+                                </td>
+                                {% endif %}
+                                {% if param.status > 1 or param.title %}
+                                    <td style="line-height: 28px;">
+                                        {% if not item.rms or not item.rms.name %}
+                                        <span class="text-danger">无包装人</span>
+                                        {% else %}
+                                            {{ item.rms.name }}
+                                        {% endif %}
+                                    </td>
+                                    <td style="line-height: 28px;">
+                                        {% if not item.rms or not item.rms.name %}
+                                        <span class="text-danger">未分配时间</span>
+                                        {% else %}
+                                            {{ item.uptime }}
+                                        {% endif %}
+                                    </td>
+                                    <td style="line-height: 28px;">
+                                        {% if item.status == -1 %}
+                                            <span class="text-danger">已下线</span>
+                                        {% endif %}
+                                        {% if item.status == 0 %}
+                                            <span class="text-danger">未进黑名单</span>
+                                        {% endif %}
+                                        {% if item.status == 1 %}
+                                            <span class="text-navy">待分配</span>
+                                        {% endif %}
+                                        {% if item.status == 2 %}
+                                            <span class="text-navy">包装中</span>
+                                        {% endif %}
+                                        {% if item.status == 3 %}
+                                            <span class="text-navy">已上线</span>
+                                        {% endif %}
+                                        {% if item.status != 0 and not item.operatorId %}
+                                            <span class="text-danger">（老数据）</span>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+
+                                {% if param.status == 3 or param.title %}
+                                    <td style="line-height: 28px;">
+                                        {% if param.status != 3 %}
+                                        <span class="text-danger">未上线</span>
+                                        {% else %}
+                                        {{ item.blacklistUpdateAt }}
+                                        {% endif %}
+                                    </td>
+
+                                    <td style="line-height: 28px;">
+                                        {% if item.ipStatis.showNumberToUser != 0 %}
+                                        {{ (item.ipStatis.clickNumberToUser / item.ipStatis.showNumberToUser * 100)|round(2, 'floor') }}%
+                                        {% else %}
+                                        0.0%
+                                        {% endif %}
+                                    </td>
+
+                                    <td style="line-height: 28px;">
+                                        {{ (item.ipStatis.avgTimeToBuyer / 60000)|round(2, 'floor') }}分
+                                    </td>
+
+                                    <td style="line-height: 28px;">
+                                        {{ item.ipStatis.toreadNumberToBuyer }}次
+                                    </td>
+                                    <td style="line-height: 28px;">
+                                        {{ item.ipStatis.askNumberToBuyer }}次
+                                    </td>
+                                    <td style="line-height: 28px;">
+                                        {{ item.ipStatis.inviteNumberToBuyer }}次
+                                    </td>
+
+                                    <td style="line-height: 28px;">
+                                        {{ item.ipStatis.contactNumberToBuyer }}次
+                                    </td>
+
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% if not list %}
+                        <p style="text-align: center" class="ng-scope">暂无数据</p>
+                        {% endif %}
+
+                        <div id='page_navigation'></div>
+                        <span style="height: 28px;line-height: 28px;float: right;" class="ng-binding">共 {{ page.item_count }} 条记录 &nbsp;&nbsp;&nbsp;</span>
+                        <input type='hidden' id='current_page' value="{{ page.page_index }}" />
+                        <input type='hidden' id='total_num' value="{{ page.item_count }}" />
+                        <input type='hidden' id='page_num' value="{{ page.page_size }}" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade in checkResult">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="row" id="verifyResultView">
+                    <div class="col-sm-12">
+                        <h3 class="m-t-none m-b">分配包装人</h3>
+                        <br>
+                        <input type="hidden" id="form-ipId" value="">
+                        <div class="form-group" id="package-date">
+                            <label class="font-noraml">黑名单上线时间</label>
+                            <div class="input-group date">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                <input type="text" id="package-date-input" class="form-control" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-noraml">黑名单包装人</label>
+                            <select id="packager" class="input-sm form-control input-s-sm inline">
+                                {% for item in packagers %}
+                                <option value="{{ item.uid }}">{{ item.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div style="padding-top: 20px;padding-bottom: 20px;">
+                    <button class="btn btn-md btn-danger pull-right m-t-n-xs" id="closeDialog" type="button"><strong>取消</strong>
+                    </button>
+                    <button style="margin-right: 16px;" class="btn btn-md btn-primary pull-right m-t-n-xs" id="package-btn" type="button"><strong>确定</strong>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade in checkResult" style="display: none"></div>
+
+{% endblock %}
+
+{% block afterfoot %}
+<script src="/static/blacklist/blacklist.js"></script>
+<script src="/static/common/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script>
+    $('#package-date .input-group.date').datepicker({
+        keyboardNavigation: false,
+        forceParse: false,
+        autoclose: true
+    });
+
+    $('#package-date-input').val(getNowFormatDate());
+
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator = "-";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + seperator + month + seperator + strDate;
+        return currentdate;
+    }
+</script>
+{% endblock %}

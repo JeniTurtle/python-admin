@@ -1,0 +1,148 @@
+<nav class="navbar-default navbar-static-side" role="navigation" id="nav">
+    <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+            <li class="nav-header">
+                <div class="dropdown profile-element">
+                        <span>
+                            <img alt="image" style="margin-top: 10px;margin-left: 24px;" src="https://cdn2.yunlaiwu.com/desktop/auth/images/logo.png" width="120px" />
+                        </span>
+                </div>
+            </li>
+
+            <li>
+                <a href="/home"><i class="fa fa-home" style="font-size: 16px;"></i> <span class="nav-label">后台主页</span></a>
+            </li>
+
+            <li>
+                <a href=""><i class="fa fa-user"></i> <span class="nav-label">用户管理</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li><a href="/user">用户列表</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <a href=""><i class="fa fa-edit"></i> <span class="nav-label">选题会</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    {% if user.crm.find('4_1_5') >= 0 %}
+                    <li><a href="/ippool">作品列表</a>
+                    </li>
+                    {% else %}
+                    <li><a href="/ippool">精品列表</a>
+                    </li>
+                    {% endif %}
+                    <li><a href="/ipverify">评审任务</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <a href=""><i class="fa fa-bar-chart-o"></i> <span class="nav-label">抽检管理</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li><a href="/sampling/verifylist">抽检任务</a>
+                    </li>
+                    {% if user.crm.find('4_1_5') >= 0 %}
+                    <li><a href="/sampling/alliplist">抽检记录</a>
+                    </li>
+                    {% else %}
+                    <li><a href="/sampling/myiplist">被抽检记录</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </li>
+
+            {% if user.crm.find('4_1_6') >= 0 or user.crm.find('4_1_7') >= 0 %}
+            <li>
+                <a href=""><i class="fa fa-gamepad"></i> <span class="nav-label">中国新编剧</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li><a href="/newwriter">报名列表</a>
+                    </li>
+                    <li><a href="/newwriter/verifyList">新编剧任务</a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+
+            {% if user.crm.find('4_1_8') >= 0 or user.crm.find('4_1_9') >= 0 or user.crm.find('4_1_10') >= 0 %}
+            <li>
+                <a href=""><i class="fa fa-book"></i> <span class="nav-label">黑名单管理</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    {% if user.crm.find('4_1_8') >= 0 %}
+                    <li><a href="/blacklist/voteList">投票列表</a>
+                    </li>
+                    {% endif %}
+                    {% if user.crm.find('4_1_10') >= 0 %}
+                    <li><a href="/blacklist/voteResult">投票结果</a>
+                    </li>
+                    {% endif %}
+                    <li><a href="/blacklist">黑名单列表</a>
+                    </li>
+                    {% if user.crm.find('4_1_9') >= 0 %}
+                    <li><a href="/blacklist/packageList">包装列表</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </li>
+            {% endif %}
+
+            {% if (',' + (user.shenhe or '') + ',').find(',1_4,') >= 0 %}
+            <li>
+                <a href=""><i class="fa fa-laptop"></i> <span class="nav-label">版保管理</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li><a href="/dci">版保审核列表</a></li>
+                </ul>
+            </li>
+            {% endif %}
+
+            {% if user.crm.find('4_1_11') >= 0 %}
+            <li>
+                <a href=""><i class="fa fa-trophy"></i> <span class="nav-label">白名单管理</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li><a href="/whitelist/list">个人名单</a>
+                    </li>
+                    <li><a href="/whitelist/agencylist">机构名单</a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+
+            <!--<li>-->
+                <!--<a href=""><i class="fa fa-trophy"></i> <span class="nav-label">榜单管理</span><span class="fa arrow"></span></a>-->
+                <!--<ul class="nav nav-second-level">-->
+                    <!--<li><a href="/review/filter#/ranks">榜单列表</a>-->
+                    <!--</li>-->
+                    <!--<li><a href="/review/filter#/linerank">线上榜单</a>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</li>-->
+
+            <!--<li>-->
+                <!--<a href=""><i class="fa fa-gamepad"></i> <span class="nav-label">活动管理</span><span class="fa arrow"></span></a>-->
+                <!--<ul class="nav nav-second-level">-->
+                    <!--<li><a href="/review/filter#/activity">活动列表</a>-->
+                    <!--</li>-->
+                    <!--<li><a href="/review/filter#/newwriter">中国新编剧</a>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</li>-->
+
+            <!--<li>-->
+                <!--<a href=""><i class="fa fa-book"></i> <span class="nav-label">征稿管理</span><span class="fa arrow"></span></a>-->
+                <!--<ul class="nav nav-second-level">-->
+                    <!--<li><a href="/review/filter#/ipCalls">征稿列表</a>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</li>-->
+
+            <!--<li>-->
+                <!--<a href=""><i class="fa fa-leanpub"></i> <span class="nav-label">文章管理</span><span class="fa arrow"></span></a>-->
+                <!--<ul class="nav nav-second-level">-->
+                    <!--<li><a href="/review/filter#/category">文章分类</a>-->
+                    <!--</li>-->
+                    <!--<li><a href="/review/filter#/news">文章列表</a>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</li>-->
+        <!--</ul>-->
+    </div>
+</nav>

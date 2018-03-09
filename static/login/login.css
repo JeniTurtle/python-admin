@@ -1,0 +1,316 @@
+.web-index-body,.web-login-box {
+	height: 100%;
+}
+.web-login-box {
+	background: #fff url(./img/bg-loading.gif) 50% 0 no-repeat;
+}
+.box-index {
+	height: 100%;
+	overflow: hidden;
+	background: #fff url(./img/index-bg.jpg) 50% 0 no-repeat;
+}
+.box-index ul {
+	padding:0;
+	margin:0;
+}
+.box-index ul li {
+	list-style-type:none;
+}
+.box-index a {
+	text-decoration:none;
+}
+.box-index a:hover {
+	text-decoration:none;color:#f00;
+}
+.box-index .cl{ clear: both;}
+.box-index input[type="text"]:focus, input[type="password"]:focus {
+	outline:none;
+}
+.box-index input::-ms-clear {
+	display:none;
+}
+.box-index .login {
+	margin:0 auto;
+	width:370px;
+	border:2px solid #eee;
+	border-bottom:none;
+	position:relative;
+}
+.box-index .header {
+	height:50px;
+	border-bottom:1px solid #e2e2e2;
+	position:relative;
+	font-family:"Microsoft Yahei";
+	text-align: center;
+	line-height: 45px;
+	font-size: 20px;
+}
+.box-index .header .switch {
+	height:45px;
+	position:absolute;
+	left:60px;
+	bottom:0;
+	font-size:16px;
+}
+.box-index .header .switch #switch_qlogin {
+	margin-right:85px;
+}
+.box-index .header .switch .switch_btn {
+	color:#999;
+	display:inline-block;
+	height:45px;
+	line-height:45px;
+	outline:none;
+}
+.box-index .header .switch .switch_btn_focus {
+	color:#333;
+	display:inline-block;
+	height:45px;
+	line-height:45px;
+	outline:none;
+}
+.box-index .header .switch .switch_btn:hover {
+	color:#333;
+	text-decoration:none;
+}
+.box-index .header .switch .switch_btn_focus:hover {
+	text-decoration:none;
+}
+.box-index #switch_bottom {
+	position: absolute;
+	width: 64px;
+	left: 0px;
+	bottom:-1px;_bottom:-2px;
+	border-bottom:2px solid #848484;
+}
+
+.box-index .web_login {
+	width:370px;
+	position:relative;
+}
+.box-index #web_login{_left:60px;*left:0;}
+.box-index .web_login .login_form {
+	width:272px;
+	margin:0 auto;
+}
+.box-index .web_login .reg_form {
+	width:300px;
+	margin:0 auto;
+}
+.box-index .web_login .input-tips {
+	float:left;
+	margin-top:10px;
+	width:50px;
+	height:42px;
+	font-size:16px;
+	line-height:42px;
+	font-family:"Hiragino Sans GB", "Microsoft Yahei";
+}
+.box-index .web_login .input-tips2 {
+	float:left;
+	text-align:right;
+	padding-right:10px;
+	width:75px;
+	height:30px;
+	font-size:16px;
+	margin-top:10px;
+	clear:both;
+	line-height:30px;
+	font-family:"Hiragino Sans GB", "Microsoft Yahei";
+}
+.box-index .web_login .inputOuter {
+	width:200px;
+	height:42px;
+	margin-top:10px;
+	float:left;
+
+}
+.box-index .web_login .inputOuter2 {
+	width:200px;
+	margin-top:6px;margin-top:5px\9;
+	float:left;
+
+}
+.box-index .web_login .inputstyle {
+	width:200px;
+	height:38px;
+	padding-left:5px;
+	line-height:30px;line-height:38px;
+	border:1px solid #D7D7D7;
+	background:#fff;
+	color:#333;border-radius:2px;
+	font-family:Verdana, Tahoma, Arial;
+	font-size:16px;
+	ime-mode:disabled;
+}
+.box-index .web_login input.inputstyle2:focus,.web_login input.inputstyle:focus{border:1px solid #00acff;box-shadow:0 0 2px #198BD4;}
+.box-index .web_login .inputstyle2 {
+	width:200px;
+	height:34px;
+	padding-left:5px;
+	line-height:34px;
+	border:1px solid #D7D7D7;
+	background:#fff;
+	color:#333;border-radius:2px;
+	font-family:Verdana, Tahoma, Arial;
+	font-size:16px;
+	ime-mode:disabled;
+}
+.box-index .web_login .uinArea {
+	height:55px;
+	position:relative;
+	z-index:10;
+}
+.box-index .web_login .pwdArea {
+	height:55px;
+	margin-bottom:10px;
+	position:relative;
+	z-index:3;
+}
+.box-index .web_qr_login {
+	position:relative;
+	display: block;
+	height: 235px;
+	overflow:hidden;
+}
+
+.box-index .cue {
+	height:40px;
+	line-height:40px;
+	font-size:14px;
+	border:1px #CCCCCC solid;
+	margin-top:10px;margin-bottom:5px;
+	text-align:center;
+	font-family:"Hiragino Sans GB", "Microsoft Yahei";
+}
+.box-index .login {
+	background-color:#ffffff;
+}
+
+.box-index h1{margin:80px auto 50px auto;text-align:center;color:#fff;margin-left:-25px;font-size:35px;font-weight: bold;text-shadow: 0px 1px 1px #555;}
+.box-index h1 sup{
+    font-size: 18px;
+    font-style: normal;
+    position: absolute;
+    margin-left: 10px;}
+.box-index .login {
+	margin-top:50px;
+	border:0;padding:5px 0;
+	background: #fff;
+	margin: 0 auto;
+	-webkit-box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, .3);
+	box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, .3);
+}
+
+.box-index .web_login{padding-bottom:20px;}
+
+.box-index .jianyi{color:#fff;text-align:center;margin-top:25px;color:#B3B8C4;}
+.box-index .reg_form li {
+height: 55px;
+}
+.box-index .cue {
+margin-top: 15px;
+margin-bottom: 10px;border:1px solid #eee;border-radius:3px;
+}
+.box-index .web_login input.inputstyle2:focus, .web_login input.inputstyle:focus {
+border: 1px solid #5796f;
+box-shadow: 0 0 0;
+}
+.box-index .web_login .reg_form {
+width: 300px;
+margin: 0 auto;
+}
+.box-index .web_login .inputstyle2 {border-radius:2px;width:210px;}
+.box-index .web_login .input-tips2 {
+padding-right: 5px;
+width: 80px;_width: 75px;_font-size:12px;
+}
+.box-index .btn-box {
+	padding-left:50px;
+	margin-top:20px;
+}
+.box-index .button_blue
+{
+
+	display:block;
+	width: 200px;
+	height:41px;
+	border-radius:4px;
+	background: #00acff;
+    border: none;
+    cursor: pointer;
+    border-bottom: 3px solid #1a93ce;
+	*border-bottom:none;
+	color:#fff;
+	font-size:16px;
+	padding:0 10px;
+	text-align:center;
+	outline:none;
+	font-family: "Microsoft Yahei",Arial, Helvetica, sans-serif;
+}
+.box-index input.button_blue:hover
+{
+	background:#1ba1e2;
+	border-bottom:3px solid #1a93ce;*border-bottom:none;
+	color:#fff;
+	text-decoration:none;
+}
+.box-index .inputArea {
+	text-align: center;
+}
+.box-index a.zcxy {
+	display: block;
+	text-decoration: underline;
+	line-height:20px;
+	color: #959ca8;
+	margin-top: 10px;
+}
+.box-index .web_login .login_form {margin-top:30px;}
+.box-index .web_login .uinArea {
+height: 60px;}
+.box-index .header .switch{left:70px;}
+
+
+/* 页尾  */
+.web-login-foot {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+}
+#sb_foot {
+	overflow: hidden;
+	height: 35px;
+	background-color: #333;
+	z-index: 9;
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	border: 0;
+	padding: 0;
+	font-weight: 400;
+}
+#sb_foot ul {
+	display: block;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	right: 20px;
+	white-space: nowrap;
+}
+#sb_foot li {
+	display: inline;
+	line-height: 32px;
+	height: 32px;
+	display: inline;
+	zoom: 1;
+}
+#sb_foot span {
+	margin: 0 10px;
+	zoom: 1;
+	color: #666;
+}
+#sb_foot a {
+	margin: 0 10px;
+	color: #666;
+}

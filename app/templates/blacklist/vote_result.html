@@ -1,0 +1,130 @@
+{% extends 'common/layout.html' %}
+
+{% block title %}黑名单投票列表{% endblock %}
+
+{% block content %}
+<div class="wrapper wrapper-content">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>黑名单作品投票列表</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-3 m-b-xs">
+                            <select class="input-sm form-control input-s-sm inline checkbox-item">
+                                {% for item in param.batchList %}
+                                <option value="/blacklist/voteResult?batch={{ item.batch }}" {% if (item.batch|string) == param.batch %} selected {% endif %}>
+                                    {{ (item.batch|string)[:4] }}年{{ (item.batch|string)[4:6] }}月{{ (item.batch|string)[6:8] }}日黑名单
+                                </option>
+                                {% endfor %}
+
+                                {% if not param.batchList %}
+                                <option>暂无黑名单投票</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>作品名称</th>
+                                <th>作者名称</th>
+                                <th>作品类型</th>
+                                <th>机器评分</th>
+                                <th>原文链接</th>
+                                <th>得票率</th>
+                                <th>查看投票详情</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in list %}
+                            <tr>
+                                <td style="line-height: 28px;">{{ item.id }}</td>
+                                <td style="line-height: 28px;"><a target="_blank" href="http://www.yunlaiwu.com/detail?id={{ item.objectId }}">{{ item.ip.title }}</a></td>
+                                <td style="line-height: 28px;">{{ item.ip.author }}</td>
+                                <td style="line-height: 28px;">{{ item.ip.workType }}</td>
+                                <td style="line-height: 28px;">{{ item.ip.pagerankVal}}分</td>
+                                <td style="line-height: 28px;">
+                                {% if not item.ip.rawFile %}
+                                    <span class="text-danger">无原文</span>
+                                {% endif %}
+                                {% if item.ip.rawFile %}
+                                    <a class="text-navy" target="_blank" href="{{ item.ip.rawFile }}">下载原文</a>
+                                {% endif %}
+                                </td>
+                                <td style="line-height: 28px;">
+                                    {% if item.voteEnd == 0 %}
+                                    <span class="text-danger">投票中</span>
+                                    {% else %}
+                                    <span class="text-navy">{{ item.voteTurnout * 100 }}%</span>
+                                    {% endif %}
+                                </td>
+                                <td style="line-height: 28px;">
+                                    {% if item.voteEnd == 0 %}
+                                    <input data-ipid="{{ item.id }}" data-title="{{ item.ip.title }}" class="check-detail-btn btn btn-danger" style="height: 28px;line-height: 28px;padding-top: 0;margin: 0;font-size: 13px;" type="button" value="查看投票进度">
+                                    {% else %}
+                                    <input data-ipid="{{ item.id }}" data-title="{{ item.ip.title }}" class="check-detail-btn btn btn-primary" style="height: 28px;line-height: 28px;padding-top: 0;margin: 0;font-size: 13px;" type="button" value="查看投票结果">
+                                    {% endif %}
+                                </td>
+                                <td style="line-height: 28px;">
+                                    {% if item.status == 0 %}
+                                    <input data-ipid="{{ item.id }}" class="pass-btn btn btn-primary" style="height: 28px;line-height: 28px;padding-top: 0;margin: 0;font-size: 13px;" type="button" value="进入黑名单">
+                                    {% else %}
+                                    <span class="text-danger">已进入黑名单</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% if not list %}
+                        <p style="text-align: center" class="ng-scope">暂无数据</p>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade in checkResult">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3 class="m-t-none m-b"></h3>
+                        <div class="verify-list" style="padding-top: 12px;">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div style="padding-bottom: 20px;">
+                    <button class="btn btn-md btn-primary pull-right m-t-n-xs" id="closeDialog" type="button"><strong>确定</strong>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade in checkResult" style="display: none"></div>
+
+{% endblock %}
+
+{% block afterfoot %}
+<script src="/static/blacklist/vote_result.js"></script>
+{% endblock %}

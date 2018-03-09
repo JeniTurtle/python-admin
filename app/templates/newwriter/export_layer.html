@@ -1,0 +1,36 @@
+<div class="modal fade in export-layer">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+
+               <div class="row">
+                    <div class="col-sm-12">
+                        <h3 class="m-t-none m-b">导出新编剧报表</h3>
+                        <br>
+                        <div class="form-group">
+                            <label>起始编号</label>
+                            <br>
+                            <input type="number" placeholder="" class="form-control" name="startId">
+                        </div>
+                        <div class="form-group">
+                            <label>截止编号</label>
+                            <br>
+                            <input type="number" placeholder="" class="form-control" name="endId">
+                            <input type="hidden" name="token" value="{{ param.token }}">
+                        </div>
+
+                        <div>
+                            <br><br>
+                            <button class="btn btn-md btn-primary pull-right m-t-n-xs close-export-layer" type="button">
+                                <strong>关闭窗口</strong>
+                            </button>
+                            <button style="margin-right: 20px" class="btn btn-md btn-primary pull-right m-t-n-xs export-csv" type="button"><strong>导出报表</strong>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade in export-layer" style="display: none"></div>

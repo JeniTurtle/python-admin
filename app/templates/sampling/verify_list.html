@@ -1,0 +1,183 @@
+{% extends 'common/layout.html' %}
+
+{% block title %}抽检任务列表{% endblock %}
+
+{% block beforehead %}
+<link href="/static/ipverify/ipverify.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="wrapper wrapper-content">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>抽检任务列表</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-3 m-b-xs">
+                            <div data-toggle="buttons" class="btn-group">
+                                <label class="btn btn-sm btn-white check-type {% if param.verifyType == '1' %} active {% endif %}" onclick="window.location.href='/sampling/verifylist?verifyType=1&verifyResult={{ param.verifyResult or '' }}'">
+                                    <input type="radio" name="options">一评抽检任务</label>
+                                <label class="btn btn-sm btn-white check-type {% if param.verifyType == '3' %} active {% endif %}" onclick="window.location.href='/sampling/verifylist?verifyType=3&verifyResult={{ param.verifyResult or '' }}'">
+                                    <input type="radio" name="options">二评抽检任务</label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2 m-b-xs">
+                            <select class="input-sm form-control input-s-sm inline checkbox-item">
+                                <option value="/sampling/verifylist?verifyType={{ param.verifyType }}" {% if param.verifyResult != '1' and param.verifyResult != '2' %} selected {% endif %}>全部任务</option>
+                                <option value="/sampling/verifylist?verifyType={{ param.verifyType }}&verifyResult=0" {% if param.verifyResult == '0' %} selected {% endif %}>未评审完</option>
+                                <option value="/sampling/verifylist?verifyType={{ param.verifyType }}&verifyResult=1" {% if param.verifyResult == '1' %} selected {% endif %}>抽检通过</option>
+                                <option value="/sampling/verifylist?verifyType={{ param.verifyType }}&verifyResult=2" {% if param.verifyResult == '2' %} selected {% endif %}>抽检不通过</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-4 m-b-xs">
+
+                        </div>
+
+                        <div class="col-sm-3">
+                            <form method="get" action="">
+                                <div class="input-group">
+                                    <input type="text" value="{{ param.title }}" name="title" id="title-input" placeholder="请输入作品名查询" class="input-sm form-control">
+                                    <span class="input-group-btn">
+                                        <input type="submit" class="btn btn-sm btn-primary"> 搜索</input>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>作品名称</th>
+                                <th>作者姓名</th>
+                                <th>抽检任务类型</th>
+                                <th>有无梗概</th>
+                                <th>上线时间</th>
+                                <th>选题会状态</th>
+                                <th>抽检评审状态</th>
+                                <th>抽检时间</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in list %}
+                            <tr {% if item.verifyResult == 0 %} class="verify-list-item" {% endif %}>
+                                <td>{{ item.id }}</td>
+                                <td><a target="_blank" href="http://www.yunlaiwu.com/detail?id={{ item.objectId }}">{{ item.title }}</a></td>
+                                <td>{{ item.author }}</td>
+                                <td>
+                                    {% if item.verifyType == 1 %}
+                                        一评抽检任务
+                                    {% elif item.verifyType == 3 %}
+                                        二评抽检任务
+                                    {% elif item.verifyType == 4 %}
+                                        二评复审抽检任务
+                                    {% else %}
+                                        厉害了...
+                                    {% endif %}
+                                </td>
+                                {% if item.hasOutline == 1 %}
+                                    <td class="text-navy">有梗概</td>
+                                {% else %}
+                                    <td class="text-warning">无梗概</td>
+                                {% endif %}
+                                <td>{{ item.publishTime }}</td>
+
+                                {% if item.ipPoolType == 0 %}
+                                    <td class="text-warning ippool-status" {% if item.verifyResult == 0 or item.verifyResult == 3 %} style="display:none" {% endif %}>一评待分配</td>
+                                {% elif item.ipPoolType == 1 and item.status == 0 %}
+                                    <td class="text-warning ippool-status" {% if item.verifyResult == 0 or item.verifyResult == 3 %} style="display:none" {% endif %}>一评待评审</td>
+                                {% elif item.ipPoolType == 1 and item.status == 1 %}
+                                    <td class="text-navy ippool-status" {% if item.verifyResult == 0 or item.verifyResult == 3 %} style="display:none" {% endif %}>一评通过</td>
+                                {% elif item.ipPoolType == 1 and item.status == 2 %}
+                                    <td class="text-danger ippool-status" {% if item.verifyResult == 0 or item.verifyResult == 3 %} style="display:none" {% endif %}>一评不通过</td>
+                                {% elif item.ipPoolType == 3 and item.status == 0 %}
+                                    <td class="text-warning ippool-status" {% if item.verifyResult == 0 or item.verifyResult == 3 %} style="display:none" {% endif %}>二评待评审</td>
+                                {% elif item.ipPoolType == 3 and item.status == 1 %}
+                                    <td class="text-navy ippool-status" {% if item.verifyResult == 0 or item.verifyResult == 3 %} style="display:none" {% endif %}>二评通过</td>
+                                {% elif item.ipPoolType == 3 and item.status == 2 %}
+                                    <td class="text-danger ippool-status" {% if item.verifyResult == 0 or item.verifyResult == 3 %} style="display:none" {% endif %}>二评不通过</td>
+                                {% elif item.ipPoolType == 4 and item.status == -1 %}
+                                    <td class="text-warning ippool-status" {% if item.verifyResult == 0 or item.verifyResult == 3 %} style="display:none" {% endif %}>二评复审待分配</td>
+                                {% elif item.ipPoolType == 4 and item.status == 0 %}
+                                    <td class="text-warning ippool-status" {% if item.verifyResult == 0 or item.verifyResult == 3 %} style="display:none" {% endif %}>二评复审待评审</td>
+                                {% elif item.ipPoolType == 4 and item.status == 1 %}
+                                    <td class="text-navy ippool-status" {% if item.verifyResult == 0 or item.verifyResult == 3 %} style="display:none" {% endif %}>二评复审通过</td>
+                                {% elif item.ipPoolType == 4 and item.status == 2 %}
+                                    <td class="text-danger ippool-status" {% if item.verifyResult == 0 or item.verifyResult == 3 %} style="display:none" {% endif %}>二评复审不通过</td>
+                                {% else %}
+                                    <td class="ippool-status">错误状态</td>
+                                {% endif %}
+
+                                <td class="ippool-hide" {% if item.verifyResult != 0 and item.verifyResult != 3 %} style="display:none" {% endif %}>评审后可查看</td>
+
+                                {% if item.verifyResult == 0 %}
+                                    <td class="text-warning verify-result">待评审</td>
+                                {% elif item.verifyResult == 1 %}
+                                    <td class="text-navy verify-result">抽检通过</td>
+                                {% elif item.verifyResult == 2 %}
+                                    <td class="text-danger verify-result">抽检不通过</td>
+                                {% elif item.verifyResult == 3 %}
+                                    <td>放弃</td>
+                                {% else %}
+                                    <td>错误状态</td>
+                                {% endif %}
+
+                                <td>{{ item.updateAt }}</td>
+
+                                {% if item.verifyResult == 0 %}
+                                <td class="operation-td">
+                                    <select class="input-sm form-control input-s-sm inline verify-select" data-verifyType="{{ item.verifyType }}" data-ipId="{{ item.objectId }}">
+                                        <option value="0">待评审</option>
+                                        <option value="1">通过</option>
+                                        <option value="2">不通过</option>
+                                        <option value="3">放弃</option>
+                                    </select>
+                                </td>
+                                {% else %}
+                                <td>无法操作</td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                        {% if not list %}
+                        <p style="text-align: center" class="ng-scope">暂无数据</p>
+                        {% endif %}
+
+                        <div id='page_navigation'></div>
+                        <span style="height: 28px;line-height: 28px;float: right;" class="ng-binding">共 {{ page.item_count }} 条记录 &nbsp;&nbsp;&nbsp;</span>
+                        <div style="float: right;width: 120px;">
+                            跳转到
+                                <input id="jump-page" value="{{ page.page_index }}" type="text" style="height: 28px; width: 50px; display: inline" placeholder="" class="form-control ng-pristine ng-untouched ng-valid ng-not-empty">
+                                页
+                        </div>
+                        <input type='hidden' id='current_page' value="{{ page.page_index }}" />
+                        <input type='hidden' id='total_num' value="{{ page.item_count }}" />
+                        <input type='hidden' id='page_num' value="{{ page.page_size }}" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block afterfoot %}
+<script src="/static/sampling/sampling_verify.js"></script>
+{% endblock %}

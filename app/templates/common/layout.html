@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app="admin">
+<head>
+    <title>{% block title %} ? {% endblock %} - 云莱坞后台管理中心</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+    <link href="/static/common/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/common/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/common/css/animate.css" rel="stylesheet">
+    <link href="/static/common/css/style.css" rel="stylesheet">
+    <link href="/static/login/login.css" rel="stylesheet">
+    {% block beforehead %}<!-- before head  -->{% endblock %}
+</head>
+<body>
+
+{% include 'common/sidebar.html' %}
+
+<div id="page-wrapper" class="gray-bg dashbard-1">
+    {% include 'common/header.html' %}
+
+    {% block content %}
+    {% endblock %}
+
+    {% include 'common/footer.html' %}
+</div>
+
+<!-- Mainly scripts -->
+<script src="/static/common/js/jquery-2.1.1.min.js"></script>
+<script src="/static/common/js/bootstrap.min.js?v=3.4.0"></script>
+<script src="/static/common/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="/static/common/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="/static/common/js/hplus.js"></script>
+<script src="/static/common/js/page.js"></script>
+<script src="/static/common/js/plugins/pace/pace.min.js"></script>
+
+{% block afterfoot %}<!-- after foot  -->{% endblock %}
+</body>
+</html>

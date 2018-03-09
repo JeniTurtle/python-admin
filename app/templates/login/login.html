@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html ng-app="admin">
+<head>
+    <title>后台登录 - 云莱坞后台管理中心</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+    <link href="/static/common/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/common/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/common/css/animate.css" rel="stylesheet">
+    <link href="/static/common/css/style.css" rel="stylesheet">
+    <link href="/static/login/login.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+
+<div class="box-index">
+    <h1>云莱坞后台管理系统<sup>V2016</sup></h1>
+    <div class="login">
+        <div class="header">
+            用户登录
+        </div>
+
+        <div class="web_qr_login" id="web_qr_login">
+            <!--登录-->
+            <div class="web_login" id="web_login">
+
+                <div class="login-box">
+
+                    <div class="login_form">
+                        <form method="post" class="loginForm" id="login-form" name="loginForm">
+                            <div class="uinArea">
+                                <label class="input-tips" for="phone">手机：</label>
+                                <div class="inputOuter">
+                                    <input type="phone" id="phone" class="inputstyle" placeholder="" required="">
+                                </div>
+                            </div>
+                            <div class="pwdArea">
+                                <label class="input-tips" for="password">密码：</label>
+                                <div class="inputOuter">
+                                    <input type="password" id="password" class="inputstyle" name="password" required="" />
+                                </div>
+                            </div>
+                            <div class="btn-box">
+                                <input type="button" id="login-btn" value="登 录" class="button_blue" />
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+            <!--登录end-->
+        </div>
+    </div>
+    <div class="jianyi">*推荐使用ie8或以上版本ie浏览器或Chrome内核浏览器访问本站</div>
+</div>
+
+<div  id="sb_foot" role="contentinfo">
+    <ul id="sw_footL">
+        <li><span>© 2016 云莱坞</span> | </li>
+        <li><span>沪ICP备10042051号</span> | </li>
+        <li><a href="javascript:void(0)">隐私声明和 Cookie</a> | </li>
+        <li><a href="javascript:void(0)">使用条款</a> | </li>
+        <li><a href="javascript:void(0)">广告</a> | </li>
+        <li><a href="javascript:void(0)">帮助</a> | </li>
+        <li><a href="javascript:void(0)">反馈</a></li>
+    </ul>
+</div>
+
+<script src="/static/common/js/jquery-2.1.1.min.js"></script>
+<script src="/static/common/js/bootstrap.min.js"></script>
+<script src="/static/login/login.js"></script>
+</body>
+
+</html>

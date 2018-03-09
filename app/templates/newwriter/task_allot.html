@@ -1,0 +1,35 @@
+<div class="modal fade in allot-task-view">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3 class="m-t-none m-b">分配任务</h3>
+                        <br>
+                        <p>
+                            请选择评审人员：
+                        </p>
+                        <div class="user-list" style="width: 200px;background: #fff;border: 1px solid #e7eaec;border-radius: 3px;padding: 10px;max-height: 134px;overflow-y: scroll;">
+                        </div>
+                        <br>
+                        <p>
+                            IP被评审次数: &nbsp;
+                            <input type="number" style="width: 260px;display: inline-block" placeholder="评审次数不得大于分配的用户人数" class="form-control" id="everyone-num">
+                        </p>
+
+                    </div>
+                </div>
+				<br>
+                <div style="padding-bottom: 20px;">
+                    <button class="btn btn-md btn-primary pull-right m-t-n-xs" type="button" id="closeAllotDialog" ><strong>取消分配</strong>
+                    </button>
+
+                    <button style="margin-right: 20px" class="btn btn-md btn-primary pull-right m-t-n-xs" id="task-allot-btn" type="button"><strong>确认分配</strong>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade in allot-task-view" style="display: none"></div>

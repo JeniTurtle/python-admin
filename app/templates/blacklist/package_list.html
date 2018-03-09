@@ -1,0 +1,151 @@
+{% extends 'common/layout.html' %}
+
+{% block title %}黑名单包装列表{% endblock %}
+
+{% block beforehead %}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper wrapper-content">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>黑名单包装列表</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-2 m-b-xs">
+                            <div data-toggle="buttons" class="btn-group">
+                                <label class="btn btn-sm btn-white check-type {% if param.status == 2 %} active {% endif %}" onclick="window.location.href='/blacklist/packageList?status=2'">
+                                    <input type="radio" name="options">待包装</label>
+                                <label class="btn btn-sm btn-white check-type {% if param.status == 3 %} active {% endif %}" onclick="window.open('http://api.yunlaiwu.com/mis/ip/opblacklist')">
+                                    <input type="radio" name="options">已包装</label>
+                            </div>
+                        </div>
+                        {% if param.status == 2 or param.title %}
+                        <div class="col-sm-2"><a target="_blank" href="http://api.yunlaiwu.com/mis/ip/opblackpage" class="package-btn btn btn-primary" style="height: 28px;line-height: 28px;padding-top: 0;margin: 0;font-size: 13px;" >包装黑名单</a></div>
+                        <div class="col-sm-5"></div>
+                        {% else %}
+                        <div class="col-sm-7"></div>
+                        {% endif %}
+                        <div class="col-sm-3">
+                            <form method="get" action="">
+                                <div class="input-group">
+                                    <input type="text" value="{{ param.title }}" name="title" id="title-input" placeholder="请输入作品名查询" class="input-sm form-control">
+                                    <span class="input-group-btn">
+                                        <input type="submit" class="btn btn-sm btn-primary"> 搜索</input>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>作品名称</th>
+                                <th>作者名称</th>
+                                <th>作品类型</th>
+                                <th>机器评分</th>
+                                <th>原文链接</th>
+                                <th>预期上线时间</th>
+                                {% if param.status == 3 or param.title %}
+                                <th>黑名单上线时间</th>
+                                {% endif %}
+                                <th>推荐原因</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in list %}
+                            <tr>
+                                <td style="line-height: 28px;">{{ item.id }}</td>
+                                <td style="line-height: 28px;"><a target="_blank" href="http://www.yunlaiwu.com/detail?id={{ item.objectId }}">{{ item.ip.title }}</a></td>
+                                <td style="line-height: 28px;">{{ item.ip.author }}</td>
+                                <td style="line-height: 28px;">{{ item.ip.workType }}</td>
+                                <td style="line-height: 28px;">{{ item.ip.pagerankVal}}分</td>
+                                <td style="line-height: 28px;">
+                                {% if not item.ip.rawFile %}
+                                    <span class="text-danger">无原文</span>
+                                {% endif %}
+                                {% if item.ip.rawFile %}
+                                    <a class="text-navy" target="_blank" href="{{ item.ip.rawFile }}">下载原文</a>
+                                {% endif %}
+                                </td>
+                                <td style="line-height: 28px;">
+                                    {{ item.uptime }}
+                                </td>
+                                {% if param.status == 3 or param.title %}
+                                    <td style="line-height: 28px;">
+                                        {% if item.status == 2 %}
+                                            <span class="text-danger">未上线</span>
+                                        {% else %}
+                                            {{ item.blacklistUpdateAt }}
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+
+                                <td style="line-height: 28px;">
+                                    <input data-ipid="{{ item.id }}" data-title="{{ item.ip.title }}" class="reason-detail-btn btn btn-primary" style="height: 28px;line-height: 28px;padding-top: 0;margin: 0;font-size: 13px;" type="button" value="查看推荐原因">
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% if not list %}
+                        <p style="text-align: center" class="ng-scope">暂无数据</p>
+                        {% endif %}
+
+                        <div id='page_navigation'></div>
+                        <span style="height: 28px;line-height: 28px;float: right;" class="ng-binding">共 {{ page.item_count }} 条记录 &nbsp;&nbsp;&nbsp;</span>
+                        <input type='hidden' id='current_page' value="{{ page.page_index }}" />
+                        <input type='hidden' id='total_num' value="{{ page.item_count }}" />
+                        <input type='hidden' id='page_num' value="{{ page.page_size }}" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade in checkResult">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3 class="m-t-none m-b">投票详情</h3>
+                        <div class="verify-list" style="padding-top: 12px;">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div style="padding-bottom: 20px;">
+                    <button class="btn btn-md btn-primary pull-right m-t-n-xs" id="closeDialog" type="button"><strong>确定</strong>
+                    </button>
+                    <a target="_blank" href="http://api.yunlaiwu.com/mis/ip/opblackpage" style="margin-right: 16px;" class="btn btn-md btn-primary pull-right m-t-n-xs" id="reason-btn"><strong>包装黑名单</strong>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade in checkResult" style="display: none"></div>
+
+{% endblock %}
+
+{% block afterfoot %}
+<script src="/static/blacklist/package_list.js"></script>
+{% endblock %}

@@ -1,0 +1,60 @@
+<div class="row border-bottom">
+    <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary "><i class="fa fa-bars"></i> </a>
+            <form role="search" class="navbar-form-custom" method="get" action="">
+                <div class="form-group">
+                    <input type="text" placeholder="请输入您需要查找的内容 …" class="form-control" name="top-search" id="top-search">
+                </div>
+            </form>
+        </div>
+        <ul class="nav navbar-top-links navbar-right">
+            <li>
+                    <span class="m-r-sm text-muted welcome-message">
+                        <a href="/home" title="返回首页">
+                            <i class="fa fa-home"></i>
+                        </a>欢迎使用云莱坞后台管理中心
+                    </span>
+            </li>
+
+            <li>
+                    <span class="m-r-sm text-muted welcome-message">
+                        您好，尊敬的用户 {{ user.name }}
+                    </span>
+            </li>
+
+            <li class="dropdown" style="display:none">
+                <a class="dropdown-toggle count-info" data-toggle="dropdown" href="">
+                    <i class="fa fa-envelope"></i>  <span class="label label-warning">100</span>
+                </a>
+                <ul class="dropdown-menu dropdown-alerts">
+                    <li>
+                        <a>
+                            <div>
+                                <i class="fa fa-bell"></i> &nbsp; 您还有100部作品待审核
+                                <span class="pull-right text-muted small"></span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <div class="text-center link-block">
+                            <a href="/">
+                                <strong>查看任务列表 </strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+
+
+            <li>
+                <a href="/login">
+                    <i class="fa fa-sign-out"></i> 退出
+                </a>
+            </li>
+        </ul>
+
+    </nav>
+</div>

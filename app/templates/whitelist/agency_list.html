@@ -1,0 +1,220 @@
+{% extends 'common/layout.html' %}
+
+{% block title %}白名单列表{% endblock %}
+
+{% block content %}
+<div class="wrapper wrapper-content">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>【机构】白名单列表</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                     <div class="row">
+                        <div class="col-sm-5 m-b-xs">
+                            <div data-toggle="buttons" class="btn-group">
+                                <label class="btn btn-sm btn-white check-type {% if param.type == 'open' %} active {% endif %}" onclick="window.location.href='/whitelist/agencylist?type=open'">
+                                    <input type="radio" name="options">已开通列表</label>
+                                <label class="btn btn-sm btn-white check-type {% if param.type == 'draft' %} active {% endif %}" onclick="window.location.href='/whitelist/agencylist?type=draft'">
+                                    <input type="radio" name="options">草稿列表</label>
+                                <label class="btn btn-sm btn-white check-type" onclick="window.open('/whitelist/agencyadd')">
+                                    <input type="radio" name="options">录入白名单</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4" style="text-align: right;line-height: 32px">
+
+                        </div>
+                        <div class="col-sm-3">
+
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        {% if param.type == 'open' %}
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>机构简称</th>
+                                <th>机构全称</th>
+                                <th>手机号码</th>
+                                <th>开通权限</th>
+                                <th>开通人</th>
+                                <th>初始密码</th>
+                                <th>手机验证</th>
+                                <th>发送短信</th>
+                                <th>发送邮件</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in data %}
+                            <tr>
+                                <td>{{ (page.page_index - 1) * page.page_size + loop.index }}</td>
+                                <td>{{ item.nickname }}</td>
+                                <td>{{ item.company }}</td>
+                                <td>{{ item.mobilePhoneNumber }}</td>
+                                <td class="text-navy">{% if item.ability == 1 %}卖{% elif item.ability == 2 %}卖 买{% else %}无权限{% endif %}</td>
+                                <td>{{ item.openAdmin }}</td>
+                                <td>{% if item.passwd %}{{ item.passwd }}{% else %}已修改{% endif %}</td>
+                                <td>{% if item.verify %}<span class="text-navy">已验证</span>{% else %}<span class="text-danger">未验证</span>{% endif %}</td>
+                                <td><a class="sendSMS" data-id="{{ item.objectId }}" data-mobile="{{ item.mobilePhoneNumber }}" data-passwd="{{ item.passwd }}" data-nickname="{{ item.nickname }}">发送短信</a></td>
+                                <td><a class="sendEmail" data-id="{{ item.objectId }}" data-mobile="{{ item.mobilePhoneNumber }}" data-passwd="{{ item.passwd }}" data-nickname="{{ item.nickname }}" data-ability="{{ item.ability }}" data-email="{{ item.email }}">发送邮件</a></td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>常用名</th>
+                                <th>手机号码</th>
+                                <th>录入人</th>
+                                <th>录入时间</th>
+                                <th>修改</th>
+                                <th>删除</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in data %}
+                            <tr>
+                                <td>{{ (page.page_index - 1) * page.page_size + loop.index }}</td>
+                                <td>{{ item.nickname }}</td>
+                                <td>{{ item.mobilePhoneNumber }}</td>
+                                <td>{{ item.saveAdmin }}</td>
+                                <td class="timeAt">{{ item.updatedAt }}</td>
+                                <td><a href="/whitelist/agencyadd?id={{ item.objectId }}" target="_blank">编辑</a></td>
+                                <td><a class="deleteDraft" data-id="{{ item.objectId }}">删除</a></td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+
+                        {% if not data %}
+                        <p style="text-align: center" ng-if="nullData" class="ng-scope">暂无数据</p>
+                        {% endif %}
+
+
+                        <div id='page_navigation'>
+                        </div>
+                        <span style="height: 28px;line-height: 28px;float: right;" class="ng-binding">共 {{ page.item_count }} 条记录 &nbsp;&nbsp;&nbsp;</span>
+                        <input type='hidden' id='current_page' value="{{ page.page_index }}" />
+                            <input type='hidden' id='total_num' value="{{ page.item_count }}" />
+                            <input type='hidden' id='page_num' value="{{ page.page_size }}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block afterfoot %}
+<script>
+
+    {% if param.type == 'draft' %}
+
+    var time = $('.timeAt').text();
+    var tmpTime = time.replace(/\..*$/, '').replace('T', ' ');
+    var year = parseInt(tmpTime.split('-')[0]);
+    var month = parseInt(tmpTime.split('-')[1]);
+    var day = parseInt(tmpTime.split('-')[2]);
+    var tmpTime2 = tmpTime.split(' ')[1];
+    var hour = parseInt(tmpTime2.split(":")[0]);
+    var minute = parseInt(tmpTime2.split(":")[1]);
+    var second = parseInt(tmpTime2.split(":")[2]);
+    var d = new Date(year, month-1, day, hour + 8, minute, second);
+    var time = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes();
+    $('.timeAt').text(time);
+
+    {% endif %}
+
+
+    $('.deleteDraft').on('click', function() {
+        if(!window.confirm('确定要删除此草稿吗？')){
+            return false;
+        }
+
+        var id = $(this).data('id');
+        $.ajax({
+            type: "get",
+            url: "{{ param.apiHost }}/api/tools/delAgencyDraft?draftId=" + id + "&token={{ param.token }}",
+            data: {},
+            dataType: "json",
+            success: function(data) {
+                window.location.reload();
+            },
+            error: function() {
+                alert('删除失败！');
+            }
+        });
+    });
+
+    $('.sendSMS').on('click', function() {
+        if(!window.confirm('确定要发送短信吗？')){
+            return false;
+        }
+
+        var id = $(this).data('id'),
+            nickname = $(this).data('nickname'),
+            passwd = $(this).data('passwd'),
+            mobile = $(this).data('mobile');
+
+        $.ajax({
+            type: "get",
+            url: "{{ param.apiHost }}/api/tools/sendAgencyShortMessage?mobilePhoneNumber=" + mobile + "&passwd=" + passwd + "&username=" + nickname + "&whiteId=" + id + "&token={{ param.token }}",
+            data: {},
+            dataType: "json",
+            success: function(data) {
+                if (data.code && data.code != 0) {
+                    alert(data.msg.message || data.msg || '发送失败！');
+                } else {
+                    alert('短信发送成功！');
+                }
+            },
+            error: function() {
+                alert('短信发送失败！');
+            }
+        });
+    });
+
+    $('.sendEmail').on('click', function() {
+        if(!window.confirm('确定要发送邮件吗？')){
+            return false;
+        }
+
+        var id = $(this).data('id'),
+            nickname = $(this).data('nickname'),
+            passwd = $(this).data('passwd'),
+            ability = $(this).data('ability'),
+            email = $(this).data('email'),
+            mobile = $(this).data('mobile');
+
+        $.ajax({
+            type: "get",
+            url: "{{ param.apiHost }}/api/tools/sendAgencyMail?ability=" + ability + "&email=" + email + "&mobilePhoneNumber=" + mobile + "&passwd=" + passwd + "&nickname=" + nickname + "&whiteId=" + id + "&token={{ param.token }}",
+            data: {},
+            dataType: "json",
+            success: function(data) {
+                if (data.code && data.code != 0) {
+                    alert(data.msg.message || data.msg || '发送失败！');
+                } else {
+                    alert('邮件发送成功！');
+                }
+            },
+            error: function() {
+                alert('邮件发送失败！');
+            }
+        });
+    });
+</script>
+{% endblock %}

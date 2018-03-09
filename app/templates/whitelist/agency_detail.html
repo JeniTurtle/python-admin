@@ -1,0 +1,168 @@
+{% extends 'common/layout.html' %}
+
+{% block title %}白名单录入{% endblock %}
+
+{% block content %}
+<style>
+    .m-t-8 {margin-top: 8px;}
+    .form-group {overflow: hidden}
+</style>
+<div class="wrapper wrapper-content" id="view">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>录入白名单【机构】</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label m-t-8">公司简称</label>
+
+                        <div class="col-sm-6">
+                            <input type="text" value="{{ data.nickname or '' }}" name="nickname" placeholder="请输入公司简称" class="form-control">
+                        </div>
+                        <div class="col-sm-4">
+                            <span class="help-block m-b-none m-t-8"></span>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label m-t-8">公司全称</label>
+
+                        <div class="col-sm-6">
+                            <input type="text" value="{{ data.company or '' }}" name="company" placeholder="请输入公司全称" class="form-control">
+                        </div>
+                        <div class="col-sm-4">
+                            <span class="help-block m-b-none m-t-8"></span>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label m-t-8">电话号码</label>
+
+                        <div class="col-sm-6">
+                            <input type="text" value="{{ data.mobilePhoneNumber or '' }}" name="mobilePhoneNumber" placeholder="请输入电话号码" class="form-control">
+                        </div>
+                        <div class="col-sm-4">
+                            <span class="help-block m-b-none m-t-8"></span>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label m-t-8">工作邮箱</label>
+
+                        <div class="col-sm-6">
+                            <input type="text" value="{{ data.email or '' }}" name="email" placeholder="请输入工作邮箱" class="form-control">
+                        </div>
+                        <div class="col-sm-4">
+                            <span class="help-block m-b-none m-t-8"></span>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+
+                    <div class="form-group" style="margin-top: 20px">
+                        <br>
+                        <input type="button" id="save-draft-btn" class="btn btn-primary btn-warning" value="保存草稿">
+                        &nbsp;&nbsp;
+                        <input type="button" id="open-auth-btn" class="btn btn-primary" value="开通权限">
+                        &nbsp;&nbsp
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block afterfoot %}
+
+<script>
+
+
+    $('#save-draft-btn').click(function() {
+        var data = getData();
+        data.storedIp = '{{ param.storedIp }}';
+
+        $.ajax({
+            type: "post",
+            url: "{{ param.apiHost }}/api/tools/saveAgencyDraft?token={{ param.token }}",
+            data: data,
+            dataType: "json",
+            success: function(data) {
+                if (data.code && data.code != 0) {
+                    alert(data.msg || '保存失败！');
+                } else {
+                    alert('保存草稿成功！');
+                }
+            },
+            error: function() {
+                alert('保存失败！');
+            }
+        });
+
+    });
+
+    $('#open-auth-btn').click(function() {
+        var data = getData();
+        data.storedIp = '{{ param.storedIp }}';
+
+        $.ajax({
+            type: "post",
+            url: "{{ param.apiHost }}/api/tools/openAgencyRight?token={{ param.token }}",
+            data: data,
+            dataType: "json",
+            success: function(data) {
+                if (data.code && data.code != 0) {
+                    alert(data.msg || '保存失败！');
+                } else {
+                    alert('录入成功！');
+                }
+            },
+            error: function() {
+                alert('保存失败！');
+            }
+        });
+
+    });
+
+    function getData() {
+        var fields = ["nickname", "email", "mobilePhoneNumber", "company"];
+
+        var key, item, data = {};
+
+        for (key in fields) {
+            item = fields[key];
+            data[item] = $('input[name=' + item + ']').val();
+        }
+
+        return data;
+    }
+
+
+</script>
+
+{% if data.shortname or data.company or data.role %}
+<script>
+    $('#movieman-register-btn').trigger('click');
+</script>
+{% endif %}
+
+{% if data.workname1 or data.workname2 or data.workname3 %}
+<script>
+    $('#zuopin-auth-btn').trigger('click');
+</script>
+{% endif %}
+
+{% endblock %}

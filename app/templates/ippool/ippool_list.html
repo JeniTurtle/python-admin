@@ -1,0 +1,239 @@
+{% extends 'common/layout.html' %}
+
+{% block title %}作品列表{% endblock %}
+
+{% block content %}
+<script src="/static/ippool/ippool.js"></script>
+
+<div class="wrapper wrapper-content">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>作品列表</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        {% if user.crm.find('4_1_5') >= 0 %}
+                        <div class="col-sm-5 m-b-xs">
+                            <div data-toggle="buttons" class="btn-group">
+                                <!--<label class="btn btn-sm btn-white check-type {% if param.verifyType == '0' and (param.status == '0' or param.status == None) %} active {% endif %}" onclick="window.location.href='/ippool?verifyType=0&status=0&hasOutline={{ param.hasOutline or '' }}'">-->
+                                    <!--<input type="radio" name="options">一评待分配</label>-->
+
+                                <label class="btn btn-sm btn-white check-type {% if param.verifyType == '1' %} active {% endif %}" onclick="window.location.href='/ippool?verifyType=1&status={{ param.status or '' }}&hasOutline={{ param.hasOutline or '' }}'">
+                                    <input type="radio" name="options">一评阶段</label>
+                                <!--<label class="btn btn-sm btn-white check-type {% if param.verifyType == '1' and param.status == '1' %} active {% endif %}" onclick="window.location.href='/ippool?verifyType=1&status=1&hasOutline={{ param.hasOutline or '' }}'">-->
+                                    <!--<input type="radio" name="options">二评待分配</label>-->
+                                <label class="btn btn-sm btn-white check-type {% if param.verifyType == '3' %} active {% endif %}" onclick="window.location.href='/ippool?verifyType=3&status={{ param.status or '' }}&hasOutline={{ param.hasOutline or '' }}'">
+                                    <input type="radio" name="options">二评阶段</label>
+                                <label class="btn btn-sm btn-white check-type {% if param.verifyType == '4' %} active {% endif %}" onclick="window.location.href='/ippool?verifyType=4&status={{ param.status or '' }}&hasOutline={{ param.hasOutline or '' }}'">
+                                    <input type="radio" name="options">打回复审阶段</label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2 m-b-xs"></div>
+                        {% endif %}
+
+                        {% if param.verifyType != '0' and user.crm.find('4_1_5') >= 0 %}
+                        <div class="col-sm-2 m-b-xs">
+                            <select class="input-sm form-control input-s-sm inline checkbox-item">
+                                <option value="/ippool?verifyType={{ param.verifyType }}&hasOutline={{ param.hasOutline or '' }}" {% if param.status == None %} selected {% endif %}>全部作品</option>
+                                <option value="/ippool?verifyType={{ param.verifyType }}&status=0&hasOutline={{ param.hasOutline or '' }}" {% if param.status == '0' %} selected {% endif %}>未评审完</option>
+                                <option value="/ippool?verifyType={{ param.verifyType }}&status=2&hasOutline={{ param.hasOutline or '' }}" {% if param.status == '2' %} selected {% endif %}>评审不通过</option>
+                                <option value="/ippool?verifyType={{ param.verifyType }}&status=1&hasOutline={{ param.hasOutline or '' }}" {% if param.status == '1' %} selected {% endif %}>评审通过</option>
+                            </select>
+                        </div>
+                        {% endif %}
+
+                        <!--<div class="col-sm-2 m-b-xs">-->
+                            <!--<select class="input-sm form-control input-s-sm inline checkbox-item">-->
+                                <!--<option value="/ippool?verifyType={{ param.verifyType }}&status={{ param.status or '' }}" {% if param.hasOutline != '0' and param.hasOutline != '1' %} selected {% endif %}>全部作品</option>-->
+                                <!--<option value="/ippool?verifyType={{ param.verifyType }}&status={{ param.status or '' }}&hasOutline=1" {% if param.hasOutline == '1' %} selected {% endif %}>有梗概</option>-->
+                                <!--<option value="/ippool?verifyType={{ param.verifyType }}&status={{ param.status or '' }}&hasOutline=0" {% if param.hasOutline == '0' %} selected {% endif %}>无梗概</option>-->
+                            <!--</select>-->
+                        <!--</div>-->
+
+                        <div class="col-sm-3">
+                            <form method="get" action="">
+                                <div class="input-group">
+                                    <input type="text" value="{{ param.title }}" name="title" id="title-input" placeholder="请输入作品名查询" class="input-sm form-control">
+                                    <span class="input-group-btn">
+                                        <input type="submit" class="btn btn-sm btn-primary"> 搜索</input>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>作品名称</th>
+                                <th>作者姓名</th>
+                                <th>有无梗概</th>
+                                <th>评审结果</th>
+                                <th><a href="/ippool?verifyType={{ param.verifyType }}&status={{ param.status or '' }}&hasOutline={{ param.hasOutline or '' }}">上线时间</a></th>
+                                <th><a href="/ippool?verifyType={{ param.verifyType }}&status={{ param.status or '' }}&hasOutline={{ param.hasOutline or '' }}&order=1">最近评审时间</a></th>
+                                {% if user.crm.find('4_1_5') >= 0 %}
+                                <th>查看评审记录</th>
+                                {% endif %}
+                                {% if user.crm.find('4_1_10') >= 0 and param.title %}
+                                <th>黑名单操作</th>
+                                {% endif %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in list %}
+                            <tr>
+                                <td>{{ item.id }}</td>
+                                <td><a target="_blank" href="http://www.yunlaiwu.com/detail?id={{ item.objectId }}">{{ item.title }}</a></td>
+                                <td>{{ item.author }}</td>
+                                {% if item.hasOutline == 1 %}
+                                    <td class="text-navy">有梗概</td>
+                                {% else %}
+                                    <td class="text-warning">无梗概</td>
+                                {% endif %}
+
+                                {% if item.verifyType == 0 %}
+                                    <td class="text-warning">一评待分配</td>
+                                {% elif item.verifyType == 1 and item.status == 0 %}
+                                    <td class="text-warning">一评待评审</td>
+                                {% elif item.verifyType == 1 and item.status == 1 %}
+                                    <td class="text-navy">一评通过</td>
+                                {% elif item.verifyType == 1 and item.status == 2 %}
+                                    <td class="text-danger">一评不通过</td>
+                                {% elif item.verifyType == 3 and item.status == 0 %}
+                                    <td class="text-warning">二评待评审</td>
+                                {% elif item.verifyType == 3 and item.status == 1 %}
+                                    <td class="text-navy">二评通过</td>
+                                {% elif item.verifyType == 3 and item.status == 2 %}
+                                    <td class="text-danger">二评不通过</td>
+                                {% elif item.verifyType == 4 and item.status == -1 %}
+                                    <td class="text-warning">二评复审待分配</td>
+                                {% elif item.verifyType == 4 and item.status == 0 %}
+                                    <td class="text-warning">二评复审待评审</td>
+                                {% elif item.verifyType == 4 and item.status == 1 %}
+                                    <td class="text-navy">二评复审通过</td>
+                                {% elif item.verifyType == 4 and item.status == 2 %}
+                                    <td class="text-danger">二评复审不通过</td>
+                                {% elif item.status == -1 %}
+                                    <td>丢弃作品</td>
+                                {% else %}
+                                    <td>错误状态</td>
+                                {% endif %}
+
+                                <td>{{ item.createAt }}</td>
+                                <td>{{ item.updateAt }}</td>
+
+                                {% if user.crm.find('4_1_5') >= 0 %}
+                                <td>
+                                    {% if item.verifyType == 0 or item.status == -1 %}
+                                        暂无评审记录
+                                    {% else %}
+                                        <a href="javascript:checkResult('{{ item.objectId }}', {{ item.firstOldStatus }}, {{ item.secondOldStatus }}, {{ item.thirdOldStatus }}, {% if item.isOldData %} 1 {% else %} 0 {% endif %})">
+                                        {% if item.verifyType == 1 and item.status == 0 %}
+                                            查看一评进度
+                                        {% elif item.verifyType == 1 and item.status != 0 %}
+                                            查看一评结果
+                                        {% elif item.verifyType == 3 and item.status == 0 %}
+                                            查看二评进度
+                                        {% elif item.verifyType == 3 and item.status != 0 %}
+                                            查看二评结果
+                                        {% elif item.verifyType == 4 and item.status == 0 %}
+                                            查看二评复审进度
+                                        {% elif item.verifyType == 4 and item.status != 0 %}
+                                            查看二评复审结果
+                                        {% endif %}
+                                        </a>
+                                    {% endif %}
+                                </td>
+                                {% endif %}
+
+                                {% if user.crm.find('4_1_10') >= 0 and param.title %}
+                                <td>
+                                    <input data-ipid="{{ item.ipId }}" data-objectid="{{ item.objectId }}" data-title="{{ item.title }}" class="add-blacklist-btn btn btn-primary" style="height: 28px;line-height: 28px;padding-top: 0;margin: 0;font-size: 13px;" type="button" value="推荐黑名单">
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                        {% if not list %}
+                        <p style="text-align: center" class="ng-scope">暂无数据</p>
+                        {% endif %}
+
+                        <div id='page_navigation'></div>
+                        <span style="height: 28px;line-height: 28px;float: right;" class="ng-binding">共 {{ page.item_count }} 条记录 &nbsp;&nbsp;&nbsp;</span>
+                        <div style="float: right;width: 120px;">
+                            跳转到
+                                <input id="jump-page" value="{{ page.page_index }}" type="text" style="height: 28px; width: 50px; display: inline" placeholder="" class="form-control ng-pristine ng-untouched ng-valid ng-not-empty">
+                                页
+                        </div>
+                        <input type='hidden' id='current_page' value="{{ page.page_index }}" />
+                        <input type='hidden' id='total_num' value="{{ page.item_count }}" />
+                        <input type='hidden' id='page_num' value="{{ page.page_size }}" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'ippool/verify_result.html' %}
+
+{% endblock %}
+
+{% block afterfoot %}
+<script>
+    $(function() {
+        $('.add-blacklist-btn').on('click', function() {
+            if(!window.confirm('确定将此作品加入黑名单吗？')){
+                return false;
+            }
+
+            var ipId = $(this).data('ipid');
+            var objectId = $(this).data('objectid');
+            var title = $(this).data('title');
+
+
+            $.ajax({
+                type: "POST",
+                url: "/blacklist/joinBlacklist/api",
+                data: {
+                    ipId: ipId,
+                    objectId: objectId,
+                    title: title,
+                    shortcut: 1
+                },
+                dataType: "json",
+                success: function(data){
+                    if (!data.error) {
+                        alert('操作成功！');
+                        window.location.reload();
+                    } else if (data.error == 202) {
+                        alert('无权限操作！');
+                    } else if (data.error == 8888) {
+                        alert('此作品已从黑名单下线，如需上线请联系管理员！');
+                    } else if (data.error == 9999) {
+                        alert('此作品已在黑名单候选流程中，无需单独添加！');
+                    } else {
+                        alert('数据请求失败！');
+                    }
+                },
+                error: function() {
+                    alert('数据请求失败，请重新刷新页面！');
+                }
+            });
+        });
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,158 @@
+{% extends 'common/layout.html' %}
+
+{% block title %}选题会任务列表{% endblock %}
+
+{% block beforehead %}
+<link href="/static/ipverify/ipverify.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="wrapper wrapper-content">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>选题会任务列表</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-5 m-b-xs">
+                            <div data-toggle="buttons" class="btn-group">
+                                <label class="btn btn-sm btn-white check-type {% if param.verifyType == '1' %} active {% endif %}" onclick="window.location.href='/ipverify?verifyType=1&verifyResult={{ param.verifyResult or '' }}&hasOutline={{ param.hasOutline or '' }}'">
+                                    <input type="radio" name="options">一评任务</label>
+                                <label class="btn btn-sm btn-white check-type {% if param.verifyType == '3' %} active {% endif %}" onclick="window.location.href='/ipverify?verifyType=3&verifyResult={{ param.verifyResult or '' }}&hasOutline={{ param.hasOutline or '' }}'">
+                                    <input type="radio" name="options">二评任务</label>
+                                <label class="btn btn-sm btn-white check-type {% if param.verifyType == '4' %} active {% endif %}" onclick="window.location.href='/ipverify?verifyType=4&verifyResult={{ param.verifyResult or '' }}&hasOutline={{ param.hasOutline or '' }}'">
+                                    <input type="radio" name="options">二评复审任务</label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2 m-b-xs"></div>
+
+                        <div class="col-sm-2 m-b-xs">
+                            <select class="input-sm form-control input-s-sm inline checkbox-item">
+                                <option value="/ipverify?verifyType={{ param.verifyType }}&hasOutline={{ param.hasOutline or '' }}" {% if param.verifyResult != '1' and param.verifyResult != '2' %} selected {% endif %}>全部任务</option>
+                                <option value="/ipverify?verifyType={{ param.verifyType }}&verifyResult=0&hasOutline={{ param.hasOutline or '' }}" {% if param.verifyResult == '0' %} selected {% endif %}>未评审完</option>
+                                <option value="/ipverify?verifyType={{ param.verifyType }}&verifyResult=1&hasOutline={{ param.hasOutline or '' }}" {% if param.verifyResult == '1' %} selected {% endif %}>评审通过</option>
+                                <option value="/ipverify?verifyType={{ param.verifyType }}&verifyResult=2&hasOutline={{ param.hasOutline or '' }}" {% if param.verifyResult == '2' %} selected {% endif %}>评审不通过</option>
+                            </select>
+                        </div>
+
+                        <!--<div class="col-sm-2 m-b-xs">-->
+                            <!--<select class="input-sm form-control input-s-sm inline checkbox-item">-->
+                                <!--<option value="/ipverify?verifyType={{ param.verifyType }}" {% if param.hasOutline != '0' and param.hasOutline != '1' %} selected {% endif %}>全部作品</option>-->
+                                <!--<option value="/ipverify?verifyType={{ param.verifyType }}&status={{ param.verifyResult or '' }}&hasOutline=1" {% if param.hasOutline == '1' %} selected {% endif %}>有梗概</option>-->
+                                <!--<option value="/ipverify?verifyType={{ param.verifyType }}&status={{ param.verifyResult or '' }}&hasOutline=0" {% if param.hasOutline == '0' %} selected {% endif %}>无梗概</option>-->
+                            <!--</select>-->
+                        <!--</div>-->
+
+                        <div class="col-sm-3">
+                            <form method="get" action="">
+                                <div class="input-group">
+                                    <input type="text" value="{{ param.title }}" name="title" id="title-input" placeholder="请输入作品名查询" class="input-sm form-control">
+                                    <span class="input-group-btn">
+                                        <input type="submit" class="btn btn-sm btn-primary"> 搜索</input>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>作品名称</th>
+                                <th>作者姓名</th>
+                                <th>任务类型</th>
+                                <th>有无梗概</th>
+                                <th><a href="/ipverify?verifyType={{ param.verifyType }}&verifyResult={{ param.verifyResult or '' }}&hasOutline={{ param.hasOutline or '' }}">上线时间</a></th>
+                                <th><a href="/ipverify?verifyType={{ param.verifyType }}&verifyResult={{ param.verifyResult or '' }}&hasOutline={{ param.hasOutline or '' }}&order=1">评审时间</a></th>
+                                <th>评审状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in list %}
+                            <tr {% if item.verifyResult == 0 %} class="verify-list-item" {% endif %}>
+                                <td>{{ item.id }}</td>
+                                <td><a target="_blank" href="http://www.yunlaiwu.com/detail?id={{ item.objectId }}">{{ item.title }}</a></td>
+                                <td>{{ item.author }}</td>
+                                <td>
+                                    {% if item.verifyType == 1 %}
+                                        一评任务
+                                    {% elif item.verifyType == 3 %}
+                                        二评任务
+                                    {% elif item.verifyType == 4 %}
+                                        二评复审任务
+                                    {% else %}
+                                        厉害了...
+                                    {% endif %}
+                                </td>
+                                {% if item.hasOutline == 1 %}
+                                    <td class="text-navy">有梗概</td>
+                                {% else %}
+                                    <td class="text-warning">无梗概</td>
+                                {% endif %}
+                                <td>{{ item.publishTime }}</td>
+                                <td>{{ item.updateAt }}</td>
+
+                                {% if item.verifyResult == 0 %}
+                                    <td class="text-warning verify-result">待评审</td>
+                                {% elif item.verifyResult == 1 %}
+                                    <td class="text-navy verify-result">通过</td>
+                                {% elif item.verifyResult == 2 %}
+                                    <td class="text-danger verify-result">不通过</td>
+                                {% else %}
+                                    <td>错误状态</td>
+                                {% endif %}
+
+                                {% if item.verifyResult == 0 %}
+                                <td class="operation-td">
+                                    <select class="input-sm form-control input-s-sm inline verify-select" data-verifyType="{{ item.verifyType }}" data-ipId="{{ item.objectId }}">
+                                        <option value="0">待评审</option>
+                                        <option value="1">通过</option>
+                                        <option value="2">不通过</option>
+                                    </select>
+                                </td>
+                                {% else %}
+                                <td>无法操作</td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                        {% if not list %}
+                        <p style="text-align: center" class="ng-scope">暂无数据</p>
+                        {% endif %}
+
+                        <div id='page_navigation'></div>
+                        <span style="height: 28px;line-height: 28px;float: right;" class="ng-binding">共 {{ page.item_count }} 条记录 &nbsp;&nbsp;&nbsp;</span>
+                        <div style="float: right;width: 120px;">
+                            跳转到
+                                <input id="jump-page" value="{{ page.page_index }}" type="text" style="height: 28px; width: 50px; display: inline" placeholder="" class="form-control ng-pristine ng-untouched ng-valid ng-not-empty">
+                                页
+                        </div>
+                        <input type='hidden' id='current_page' value="{{ page.page_index }}" />
+                        <input type='hidden' id='total_num' value="{{ page.item_count }}" />
+                        <input type='hidden' id='page_num' value="{{ page.page_size }}" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block afterfoot %}
+<script src="/static/ipverify/ipverify.js"></script>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'common/layout.html' %}
+
+{% block title %}首页{% endblock %}
+
+{% block content %}
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">评审任务</span>
+                    <h5>已评审数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins"><a href="/ipverify" style="color: #676a6c;">{{data.verifiedCount}}部</a></h1>
+                    <div class="stat-percent font-bold text-navy">
+                        {% if data.verifiedCount + data.pendingCount != 0 %}
+                            {{ (data.verifiedCount / (data.verifiedCount + data.pendingCount) * 100)|string|truncate(5, True, '') }}%
+                        {% else %}
+                            0.00%
+                        {% endif %}
+                    </div>
+                    <small>作品</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-danger pull-right">评审任务</span>
+                    <h5>待评审数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins"><a href="/ipverify" style="color: #676a6c;">{{data.pendingCount}}部</a></h1>
+                    <div class="stat-percent font-bold text-danger">
+                        {% if data.verifiedCount + data.pendingCount != 0 %}
+                            {{ (data.pendingCount / (data.verifiedCount + data.pendingCount) * 100)|string|truncate(5, True, '') }}%
+                        {% else %}
+                            0.00%
+                        {% endif %}
+                    </div>
+                    <small>作品</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">抽检任务</span>
+                    <h5>已抽检数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins"><a href="/sampling/verifylist" style="color: #676a6c;">{{data.samplingVerifiedCount}}部</a></h1>
+                    <div class="stat-percent font-bold text-navy">
+                        {% if data.samplingVerifiedCount + data.samplingPendingCount != 0 %}
+                            {{ (data.samplingVerifiedCount / (data.samplingVerifiedCount + data.samplingPendingCount) * 100)|string|truncate(5, True, '') }}%
+                        {% else %}
+                            0.00%
+                        {% endif %}
+                    </div>
+                    <small>作品</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-danger pull-right">抽检任务</span>
+                    <h5>待抽检数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins"><a href="/sampling/verifylist" style="color: #676a6c;">{{data.samplingPendingCount}}部</a></h1>
+                    <div class="stat-percent font-bold text-danger">
+                        {% if data.samplingVerifiedCount + data.samplingPendingCount != 0 %}
+                            {{ (data.samplingPendingCount / (data.samplingVerifiedCount + data.samplingPendingCount) * 100)|string|truncate(5, True, '') }}%
+                        {% else %}
+                            0.00%
+                        {% endif %}
+                    </div>
+                    <small>作品</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block afterfoot %}
+
+{% endblock %}

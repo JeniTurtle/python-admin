@@ -1,0 +1,252 @@
+{% extends 'common/layout.html' %}
+
+{% block title %}新编剧报名列表{% endblock %}
+
+{% block content %}
+
+<div class="wrapper wrapper-content">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>新编剧报名列表</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-3 m-b-xs">
+                            <div data-toggle="buttons" class="btn-group">
+                                <label class="btn btn-sm btn-white check-type {% if param.type == '0' %} active {% endif %}" onclick="window.location.href='/newwriter?type=0'">
+                                    <input type="radio" name="options">待分配作品</label>
+
+                                <label class="btn btn-sm btn-white check-type {% if param.type == '1' %} active {% endif %}" onclick="window.location.href='/newwriter?type=1&status={{ param.status or '' }}&finalState={{ param.finalState or '' }}&boutique={{ param.boutique or '' }}'">
+                                    <input type="radio" name="options">评审阶段</label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2 m-b-xs">
+                            {% if param.type != '0' %}
+                            <select class="input-sm form-control input-s-sm inline checkbox-item">
+                                <option value="/newwriter?type={{ param.type or '' }}&status={{ param.status or '' }}&finalState=-1&boutique={{ param.boutique or '' }}" {% if param.finalState == '-1' %} selected {% endif %}>全部作品</option>
+                                <option value="/newwriter?type={{ param.type or '' }}&status={{ param.status or '' }}&finalState=0&boutique={{ param.boutique or '' }}" {% if param.finalState == '0' %} selected {% endif %}>待评审</option>
+                                <option value="/newwriter?type={{ param.type or '' }}&status={{ param.status or '' }}&finalState=1&boutique={{ param.boutique or '' }}" {% if param.finalState == '1' %} selected {% endif %}>评审中</option>
+                                <option value="/newwriter?type={{ param.type or '' }}&status={{ param.status or '' }}&finalState=2&boutique={{ param.boutique or '' }}" {% if param.finalState == '2' %} selected {% endif %}>进入周赛</option>
+                                <option value="/newwriter?type={{ param.type or '' }}&status={{ param.status or '' }}&finalState=3&boutique={{ param.boutique or '' }}" {% if param.finalState == '3' %} selected {% endif %}>已淘汰</option>
+                            </select>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-sm-2 m-b-xs">
+                            {% if param.type != '0' %}
+                            <select class="input-sm form-control input-s-sm inline checkbox-item">
+                                <option value="/newwriter?type={{ param.type or '' }}&status=-1&finalState={{ param.finalState or '' }}&boutique={{ param.boutique or '' }}" {% if param.status == '-1' %} selected {% endif %}>全部作品</option>
+                                <option value="/newwriter?type={{ param.type or '' }}&status=0&finalState={{ param.finalState or '' }}&boutique={{ param.boutique or '' }}" {% if param.status == '0' %} selected {% endif %}>未评审完</option>
+                                <option value="/newwriter?type={{ param.type or '' }}&status=1&finalState={{ param.finalState or '' }}&boutique={{ param.boutique or '' }}" {% if param.status == '1' %} selected {% endif %}>已评审完</option>
+                            </select>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-sm-2 m-b-xs">
+                            <select class="input-sm form-control input-s-sm inline checkbox-item">
+                                <option value="/newwriter?type={{ param.type or '' }}&status={{ param.status or '' }}&finalState={{ param.finalState or '' }}" {% if param.boutique == '-1' %} selected {% endif %}>全部作品</option>
+                                <option value="/newwriter?type={{ param.type or '' }}&status={{ param.status or '' }}&finalState={{ param.finalState or '' }}&boutique=1" {% if param.boutique == '1' %} selected {% endif %}>二评通过</option>
+                                <option value="/newwriter?type={{ param.type or '' }}&status={{ param.status or '' }}&finalState={{ param.finalState or '' }}&boutique=2" {% if param.boutique == '2' %} selected {% endif %}>二评不通过</option>
+                                <option value="/newwriter?type={{ param.type or '' }}&status={{ param.status or '' }}&finalState={{ param.finalState or '' }}&boutique=3" {% if param.boutique == '3' %} selected {% endif %}>初评通过</option>
+                                <option value="/newwriter?type={{ param.type or '' }}&status={{ param.status or '' }}&finalState={{ param.finalState or '' }}&boutique=4" {% if param.boutique == '4' %} selected {% endif %}>初评不通过</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <form method="get" action="/newwriter">
+                                <div class="input-group">
+                                    <input type="hidden" name="type" value="1">
+                                    <input type="text" value="{{ param.title }}" name="title" id="title-input" placeholder="请输入作品名查询" class="input-sm form-control">
+                                    <span class="input-group-btn">
+                                        <input type="submit" class="btn btn-sm btn-primary"> 搜索</input>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                {% if param.type == '0' %}
+                                <th>选择</th>
+                                {% endif %}
+                                <th>编号</th>
+                                <th>作品名称</th>
+                                {% if param.type == '1' %}
+                                <th>评审状态</th>
+                                {% endif %}
+                                {% if param.type == '1' and param.status == '1' %}
+                                <th>评审分数</th>
+                                {% endif %}
+                                <th>作品状态</th>
+                                <th>用户名</th>
+                                <th>手机号码</th>
+                                <th>下载原文</th>
+                                <th>选题会</th>
+                                <th>报名时间</th>
+                                {% if param.type != '0' %}
+                                <th>参赛状态</th>
+                                <th>操作</th>
+                                {% endif %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in list %}
+                            <tr>
+                                {% if param.type == '0' %}
+                                <td>
+                                    <input type="checkbox" class="i-checks id-checks" value="{{ item.id }}" name="newwriter_id_list">
+                                </td>
+                                {% endif %}
+                                <td>{{ item.id }}</td>
+                                <td>
+                                    {% if not item.ipPools %}
+                                        {{ item.ippreTitle }}
+                                    {% else %}
+                                        <a target="_blank" href="http://www.yunlaiwu.com/detail?id={{ item.ipPools.objectId }}">{{ item.ipPools.title }}</a>
+                                    {% endif %}
+                                </td>
+                                {% if param.type == '1' %}
+                                    {% if item.status == 0 %}
+                                        <td class="text-warning">待评审</td>
+                                    {% elif item.status == 1 %}
+                                        <td class="text-navy">已评审</td>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if param.type == '1' and param.status == '1' %}
+                                    <td>{{ item.result }}</td>
+                                {% endif %}
+
+                                {% if item.ippreStatus == 0 %}
+                                    <td>【草稿箱】</td>
+                                {% elif item.ippreStatus == 1 %}
+                                    <td class="text-warning">【未审核】</td>
+                                {% elif item.ippreStatus == 2 %}
+                                    <td class="text-navy">【审核通过】</td>
+                                {% elif item.ippreStatus == 3 %}
+                                    <td class="text-danger">【审核驳回】</td>
+                                {% elif item.ippreStatus == 4 %}
+                                    <td>【版权成交】</td>
+                                {% endif %}
+                                <td>{{ item.user.person_nickname or item.user.username or "无" }}</td>
+                                <td>{{ item.phone or item.user.mobilePhoneNumber or "无" }}</td>
+                                <td>
+                                    {% if not item.rawFile %}
+                                    <a target="_blank" class="text-danger">（未上传原文）</a>
+                                    {% else %}
+                                    <a target="_blank" href="{{ item.rawFile }}" class="text-navy">（下载原文）</a>
+                                    {% endif %}
+                                </td>
+
+                                {% if item.ipPools and item.ipPools.discard == 1 %}
+                                    <td>作品已下架</td>
+                                {% elif item.verifyType == 0 %}
+                                    <td class="text-warning">初评待分配</td>
+                                {% elif item.verifyType == 1 and item.verifyResult == 0 %}
+                                    <td class="text-warning">初评待审核</td>
+                                {% elif item.verifyType == 1 and item.verifyResult == 2 %}
+                                    <td class="text-danger">初评不通过</td>
+                                {% elif item.verifyType == 1 and item.verifyResult == 1 %}
+                                    <td class="text-navy">初评通过</td>
+                                {% elif (item.verifyType == 3 or item.verifyType == 4) and item.verifyResult == 0 %}
+                                    <td class="text-warning">二评待审核</td>
+                                {% elif (item.verifyType == 3 or item.verifyType == 4) and item.verifyResult == 1 %}
+                                    <td class="text-navy">二评通过</td>
+                                {% elif (item.verifyType == 3 or item.verifyType == 4) and item.verifyResult == 0 %}
+                                    <td class="text-warning">二评待审核</td>
+                                {% elif (item.verifyType == 3 or item.verifyType == 4) and item.verifyResult == 1 %}
+                                    <td class="text-navy">二评通过</td>
+                                {% elif (item.verifyType == 3 or item.verifyType == 4) and item.verifyResult == 2 %}
+                                    <td class="text-danger">二评不通过</td>
+                                {% else %}
+                                    <td class="text-danger">错误状态</td>
+                                {% endif %}
+                                <td>{{item.createAt}}</td>
+
+                                {% if param.type != '0' %}
+                                <td>
+                                    <select class="input-sm form-control input-s-sm inline" disabled>
+                                        <option value="0" {% if item.finalState == 0 %} selected {% endif %}>待评审</option>
+                                        <option value="1" {% if item.finalState == 1 %} selected {% endif %}>评审中</option>
+                                        <option value="2" {% if item.finalState == 2 %} selected {% endif %}>进入周赛</option>
+                                        <option value="3" {% if item.finalState == 3 %} selected {% endif %}>已淘汰</option>
+                                    </select>
+                                </td>
+
+                                <td>
+                                    {% if param.status == 0 %}
+                                        <a class="checkVerifyResult" data-status="0" data-newWriterId="{{ item.id }}">查看进度</a>
+                                    {% else %}
+                                        <a class="checkVerifyResult" data-status="1" data-newWriterId="{{ item.id }}">查看结果</a>
+                                    {% endif %}
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                        {% if not list %}
+                        <p style="text-align: center" class="ng-scope">暂无数据</p>
+                        {% endif %}
+
+                        {% if param.type == '0' %}
+                        <label class="btn btn-sm btn-white check-all">
+                            全选
+                        </label>
+                        {% if user.crm.find('4_1_7') >= 0 %}
+                        &nbsp;
+                        <label class="btn btn-sm btn-white task-allot">
+                            任务分配
+                        </label>
+                        {% endif %}
+                        &nbsp;
+                        <label class="btn btn-sm btn-white" onclick="javascript:window.open('http://t2.yunlaiwu.com:8099/newWriter.php')">
+                            下载报表
+                        </label>
+                        {% endif %}
+
+                        {% if param.type == '1'%}
+                        <label class="btn btn-sm btn-white export-excel-btn">
+                            导出评审报表
+                        </label>
+                        {% endif %}
+
+                        <div id='page_navigation'></div>
+                        <span style="height: 28px;line-height: 28px;float: right;" class="ng-binding">共 {{ page.item_count }} 条记录 &nbsp;&nbsp;&nbsp;</span>
+                        <div style="float: right;width: 120px;">
+                            跳转到
+                                <input id="jump-page" value="{{ page.page_index }}" type="text" style="height: 28px; width: 50px; display: inline" placeholder="" class="form-control ng-pristine ng-untouched ng-valid ng-not-empty">
+                                页
+                        </div>
+                        <input type='hidden' id='current_page' value="{{ page.page_index }}" />
+                        <input type='hidden' id='total_num' value="{{ page.item_count }}" />
+                        <input type='hidden' id='page_num' value="{{ page.page_size }}" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'newwriter/verify_result.html' %}
+{% include 'newwriter/task_allot.html' %}
+{% include 'newwriter/export_layer.html' %}
+
+{% endblock %}
+
+{% block afterfoot %}
+    <script src="/static/newwriter/newwriter.js"></script>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends 'common/layout.html' %}
+
+{% block title %}被抽检作品列表{% endblock %}
+
+{% block content %}
+<div class="wrapper wrapper-content">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    {% if not param.uid %}
+                    <h5>被抽检作品列表</h5>
+                    {% else %}
+                    <h5>{{ param.name }}的被抽检作品列表</h5>
+                    {% endif %}
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-2 m-b-xs">
+                            <select class="input-sm form-control input-s-sm inline checkbox-item">
+                                {% for item in allotList %}
+                                <option value="/sampling/myiplist?uid={{ param.uid }}&allotNum={{ item.allotNum }}" {% if item.allotNum == param.allotNum %} selected {% endif %}>{{ item.allotNumTitle }}</option>
+                                {% endfor %}
+
+                                {% if not allotList %}
+                                <option>暂无抽检</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="col-sm-2 m-b-xs">
+                            <select class="input-sm form-control input-s-sm inline checkbox-item">
+                                <option value="/sampling/myiplist?uid={{ param.uid }}&allotNum={{ param.allotNum }}" {% if param.verifyResult == None %} selected {% endif %}>全部作品</option>
+                                <option value="/sampling/myiplist?uid={{ param.uid }}&allotNum={{ param.allotNum }}&verifyResult=0" {% if param.verifyResult == '0' %} selected {% endif %}>未抽检完</option>
+                                <option value="/sampling/myiplist?uid={{ param.uid }}&allotNum={{ param.allotNum }}&verifyResult=2" {% if param.verifyResult == '2' %} selected {% endif %}>抽检不通过</option>
+                                <option value="/sampling/myiplist?uid={{ param.uid }}&allotNum={{ param.allotNum }}&verifyResult=1" {% if param.verifyResult == '1' %} selected {% endif %}>抽检通过</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2 input-sm">
+                            {% for item in allotList %}
+                                {% if item.allotNum == param.allotNum %}
+                                    准确率：<span class="text-navy">{{ item.accuracy * 100 }}%</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="col-sm-4 input-sm text-danger">
+                            注：黄色条目为评审与抽检结果不一致的作品
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>作品名称</th>
+                                <th>作者</th>
+                                <th>抽检类型</th>
+                                {% if not param.uid %}
+                                <th>我的评审结果</th>
+                                {% else %}
+                                <th>他的评审结果</th>
+                                {% endif %}
+                                <th>抽检人</th>
+                                <th>抽检结果</th>
+                                <th>抽检时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in list %}
+                            <tr {% if item.verifyResult != 0 and item.verifyResult != 3 and not not item.ipVerifyResult and item.verifyResult != item.ipVerifyResult %} class="text-warning" {% endif %}>
+                                <td>{{ item.id }}</td>
+                                <td><a target="_blank" href="http://www.yunlaiwu.com/detail?id={{ item.objectId }}">{{ item.ipPools.title }}</a></td>
+                                <td>{{ item.ipPools.author }}</td>
+                                <td>
+                                    {% if item.verifyType == 1 %}
+                                        初评抽检
+                                    {% elif item.verifyType == 3 %}
+                                        二评抽检
+                                    {% elif item.verifyType == 4 %}
+                                        二评复审抽检
+                                    {% endif %}
+                                </td>
+
+								{% if not item.ipVerifyResult %}
+									<td>未评审过该作品</td>
+                                {% elif item.ipVerifyResult == 1%}
+                                    <td class="text-navy">通过</td>
+                                {% elif item.ipVerifyResult == 2 %}
+                                    <td class="text-danger">不通过</td>
+                                {% else %}
+                                    <td>待审核</td>
+                                {% endif %}
+
+                                <td>{{ item.verifyPersonName }}</td>
+
+                                {% if item.verifyResult == 0 %}
+                                    <td class="text-warning">抽检待评审</td>
+                                {% elif item.verifyResult == 1%}
+                                    <td class="text-navy">抽检通过</td>
+                                {% elif item.verifyResult == 2 %}
+                                    <td class="text-danger">抽检不通过</td>
+                                {% elif item.verifyResult == 3 %}
+                                    <td>放弃</td>
+                                {% else %}
+                                    <td>错误状态</td>
+                                {% endif %}
+                                <td>{{ item.updateAt }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% if not list %}
+                        <p style="text-align: center" ng-if="nullData" class="ng-scope">暂无数据</p>
+                        {% endif %}
+
+
+                        <div id='page_navigation'>
+                        </div>
+                        <span style="height: 28px;line-height: 28px;float: right;" class="ng-binding">共 {{ page.item_count }} 条记录 &nbsp;&nbsp;&nbsp;</span>
+                        <input type='hidden' id='current_page' value="{{ page.page_index }}" />
+                            <input type='hidden' id='total_num' value="{{ page.item_count }}" />
+                            <input type='hidden' id='page_num' value="{{ page.page_size }}" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block afterfoot %}
+
+{% endblock %}

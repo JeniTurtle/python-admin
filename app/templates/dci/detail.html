@@ -1,0 +1,315 @@
+{% extends 'common/layout.html' %}
+
+{% block title %}版保审核详情{% endblock %}
+
+{% block content %}
+<div class="wrapper wrapper-content" id="view">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>作品登记</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="form-group">
+                        <span style="color: red">*</span> 我是：著作权人
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 权利归属方式：{{ data.rightownmode }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 权利获得方式：原始取得
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 作品名称：{{ data.title or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 作者署名：{{ '，'.join(data.author.split('$')) or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 作品类型：{{ data.workType or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 作品原文：<a href="{{ data.docUrl }}">{{ data.docUrl or '未填写' }}</a>
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    {% if data.copyright %}
+                    <div class="form-group">
+                        <span style="color: red">*</span> 在云莱坞出售版权：{{ data.copyright or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+                    {% endif %}
+
+                    <div class="form-group" style="line-height: 30px;">
+                        <span style="color: red">*</span> 一句话故事：{{ data.descript or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    {% if data.selfPrice %}
+                    <div class="form-group">
+                        <span style="color: red">*</span> 预估价格：{{ data.selfPrice or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+                    {% endif %}
+
+                    {% if data['QLGS-0801'] %}
+                    <div class="form-group">
+                        <span style="color: red">*</span> 合作创作说明：{{ data['QLGS-0801'] or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+                    {% endif %}
+                </div>
+            </div>
+
+
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>实名认证</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="form-group">
+                        <span style="color: red">*</span> 真实姓名：{{ data.authorrealname.split('$')[0] or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 手机号码：{{ data.mobile or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 证件类型：居民身份证
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 证件号码：{{ data.idcardno or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 证件正面：
+                        {% if data.idcardPositiveUrl %}
+                        <img height="160" src="{{ data.idcardPositiveUrl }}" alt="" />
+                        {% else %}
+                        未填写
+                        {% endif %}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 证件反面：
+                        {% if data.idcardNegativeUrl %}
+                        <img height="160" src="{{ data.idcardNegativeUrl }}" alt="" />
+                        {% else %}
+                        未填写
+                        {% endif %}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+                </div>
+            </div>
+
+            {% for item in data['coper'] %}
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>实名认证</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="form-group">
+                        <span style="color: red">*</span> 真实姓名：{{ item.name }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 证件类型：居民身份证
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 证件号码：{{ item.idnumber or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 证件正面：
+                        {% if item.idcardpic1 %}
+                        <img height="160" src="{{ item.idcardpic1 }}" alt="" />
+                        {% else %}
+                        未填写
+                        {% endif %}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 证件反面：
+                        {% if item.idcardpic2 %}
+                        <img height="160" src="{{ item.idcardpic2 }}" alt="" />
+                        {% else %}
+                        未填写
+                        {% endif %}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+                </div>
+            </div>
+
+            {% endfor %}
+
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>作品详情</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="form-group">
+                        <span style="color: red">*</span> 作品类型：{{ data.workType or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 创作性质：原创
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 权力范围：全部权利
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 完成日期：{{ data.completedate or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 完成地点：{{ data.completecountry or '未填写' }} {{ data.completecity or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 发表状态：
+                        {% if data.publishstatus == 1 %}
+                        已发表
+                        {% else %}
+                        未发表
+                        {% endif %}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    {% if data.publishstatus == 1 %}
+                    <div class="form-group">
+                        <span style="color: red">*</span> 发表日期：{{ data.firstpublishdate or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    <div class="form-group">
+                        <span style="color: red">*</span> 发表地点：{{ data.firstpublishcountry or '未填写' }} {{ data.firstpublishcity or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+                    {% endif %}
+
+                    <div class="form-group" style="line-height: 30px;">
+                        <span style="color: red">*</span> 创作说明：{{ data.explain or '未填写' }}
+                    </div>
+                    <div class="hr-line-dashed" style="margin: 10px 0;"></div>
+
+                    {% if (',' + (user.shenhe or '') + ',').find(',1_4,') >= 0 %}
+                    <div class="form-group" style="margin-top: 20px">
+                        <input type="button" id="workcheck-pass" class="btn btn-primary" value="通过审核">
+                        &nbsp;&nbsp;
+                        <input type="button" id="workcheck-refuse" class="btn btn-primary btn-warning" value="驳回审核">
+                        &nbsp;&nbsp;
+                        <input type="button" id="share-img-btn" class="btn btn-primary btn-white" value="生成图片">
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section style="display: none" class="share_popup" id="html2canvas"> </section>  
+
+<div id="leancloud-token" style="display: none">{{ leancloudToken }}</div>
+<div id="copy-id" style="display: none">{{ data.copyId }}</div>
+<div id="check-api" style="display: none">{{ checkApi }}</div>
+
+<div class="modal fade in checkResult">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="row" id="verifyResultView">
+                    <div class="col-sm-12">
+                        <h3 class="m-t-none m-b">驳回原因</h3>
+                        <br>
+                        <div class="form-group verify-result">
+                            <textarea style="height: 160px" id="pass-reason" placeholder="最多不能超过500个字..." class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div style="padding-bottom: 20px;">
+                    <button class="btn btn-md btn-danger pull-right m-t-n-xs" id="closeDialog" type="button"><strong>取消</strong>
+                    </button>
+                    <button style="margin-right: 16px;" class="btn btn-md btn-primary pull-right m-t-n-xs" id="reason-btn" type="button"><strong>确定</strong>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade in checkResult" style="display: none"></div>
+{% endblock %}
+
+{% block afterfoot %}
+<script src="/static/dci/html2canvas.js"></script>
+<script src="/static/dci/detail.js"></script>
+
+<script type="text/javascript"> 
+//console.log(str);  
+html2canvas(document.getElementById('view'), {
+    height: $("#view").outerHeight(), 
+    onrendered: function (canvas) {  
+        var image = canvas.toDataURL("image/png");  
+        var pHtml = "<img src="+image+" />";  
+        $('#html2canvas').html(pHtml);  
+
+        $('#share-img-btn').on('click', function() {
+            window.open($('#html2canvas img').eq(0).attr('src'));
+        });
+    }  
+});  
+</script>
+{% endblock %}
